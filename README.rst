@@ -29,6 +29,6 @@ Most applications will want to use
 
     import plaster
 
-    loader = plaster.get_loader(**kwargs)
-    settings = loeader.get_settings('development.ini#main')
-    app = loader.get_wsgi_app(*kwargs)
+    loader = plaster.get_loader('development.ini')
+    app_settings = loader.get_wsgi_config()
+    app = loader.get_wsgi_app()
