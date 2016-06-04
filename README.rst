@@ -30,5 +30,14 @@ Most applications will want to use
     import plaster
 
     loader = plaster.get_loader('development.ini')
-    app_settings = loader.get_wsgi_config()
-    app = loader.get_wsgi_app()
+    # to get any section out of the config file
+    settings = loader.get_settings('main')
+
+    # to get settings for a wsgi app
+    app_config = loader.get_wsgi_app_config() # defaults to main
+
+    # To get an actual wsgi app
+    app = loader.get_wsgi_app() # defaults to main
+
+    # To get a wsgi server
+    server = loader.get_wsgi_server() # defaults to main
