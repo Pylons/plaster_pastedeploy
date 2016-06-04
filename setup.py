@@ -56,4 +56,8 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
+    entry_points="""\
+    [plaster.loader]
+    ini+pastedeploy=plaster_pastedeploy.Loader
+    """
 )
