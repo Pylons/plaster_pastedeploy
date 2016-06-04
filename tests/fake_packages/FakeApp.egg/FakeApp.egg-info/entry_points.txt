@@ -1,0 +1,16 @@
+[paste.app_factory]
+
+      basic_app=fakeapp.apps:make_basic_app
+      other=fakeapp.apps:make_basic_app2
+
+
+[paste.composit_factory]
+
+      remote_addr=fakeapp.apps:make_remote_addr
+
+
+[paste.filter_factory]
+
+      caps=fakeapp.apps:make_cap_filter
+      
+

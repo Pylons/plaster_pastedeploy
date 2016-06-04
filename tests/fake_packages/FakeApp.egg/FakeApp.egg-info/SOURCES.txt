@@ -1,0 +1,8 @@
+setup.py
+FakeApp.egg-info/PKG-INFO
+FakeApp.egg-info/SOURCES.txt
+FakeApp.egg-info/dependency_links.txt
+FakeApp.egg-info/entry_points.txt
+FakeApp.egg-info/top_level.txt
+fakeapp/__init__.py
+fakeapp/apps.py
