@@ -11,7 +11,7 @@ class TestLoader(unittest.TestCase):
         self.loader = plaster_pastedeploy.Loader('config:myapp.ini#some_app')
         self.scheme = 'config'
         self.uri = 'myapp.ini'
-        self.section = 'some_app'
+        self.name = 'some_app'
 
     def test_loader_init_scheme(self):
         self.assertEqual(self.loader.scheme, self.scheme)
@@ -19,8 +19,8 @@ class TestLoader(unittest.TestCase):
     def test_loader_init_uri(self):
         self.assertEqual(self.loader.uri, self.uri)
 
-    def test_loader_init_section(self):
-        self.assertEqual(self.loader.section, self.section)
+    def test_loader_init_name(self):
+        self.assertEqual(self.loader.name, self.name)
 
 class TestSimpleURI(TestLoader):
 
@@ -28,14 +28,14 @@ class TestSimpleURI(TestLoader):
         self.loader = plaster_pastedeploy.Loader('myapp.ini')
         self.scheme = 'config'
         self.uri = 'myapp.ini'
-        self.section = None
+        self.name = None
 
 class TestOtherScheme(TestLoader):
 
     def setUp(self):
         self.loader = plaster_pastedeploy.Loader('egg:myapp.ini#main')
         self.scheme = 'egg'
-        self.section = 'main'
+        self.name = 'main'
         self.uri = 'myapp.ini'
 
 
@@ -60,22 +60,22 @@ class TestMaybeGetDefaultRelativeTo(unittest.TestCase):
         self.assertEqual(result, os.getcwd())
 
 
-class TestMaybeGetDefaultSection(unittest.TestCase):
+class TestMaybeGetDefaultName(unittest.TestCase):
 
-    def test_none_section(self):
+    def test_none_name(self):
         self.loader = plaster_pastedeploy.Loader('config:foo/bar.ini#test_app')
 
-        result = self.loader._maybe_get_default_section(None)
+        result = self.loader._maybe_get_default_name(None)
         self.assertEqual(result, 'test_app')
 
         self.loader = plaster_pastedeploy.Loader('foo.ini')
-        result = self.loader._maybe_get_default_section(None)
+        result = self.loader._maybe_get_default_name(None)
         self.assertEqual(result, None)
 
-    def test_explicit_section(self):
+    def test_explicit_name(self):
         self.loader = plaster_pastedeploy.Loader('foo.ini#test_app')
 
-        result = self.loader._maybe_get_default_section('other_app')
+        result = self.loader._maybe_get_default_name('other_app')
         self.assertEqual(result, 'other_app')
 
 class TestPasteDeployURI(unittest.TestCase):

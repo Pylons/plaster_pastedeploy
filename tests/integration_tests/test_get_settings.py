@@ -48,7 +48,7 @@ class TestSectionedURI(TestSimpleUri):
         os.chdir(here)
         self.loader = Loader('../sample_configs/test_settings.ini#section1')
 
-    def test_no_section_passed(self):
+    def test_no_section_name_passed(self):
         result = self.loader.get_settings()
         self.assertEqual(result['a'], 'default_a')
         self.assertEqual(result['b'], 'default_b')

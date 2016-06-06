@@ -22,7 +22,7 @@ Applications should use ``plaster_pastedeploy`` to load settings from named sect
 a configuration source (usually a file).
 
 Most applications will want to use
-``plaster.get_loader(uri, section=None, defaults=None) to get this loader. It then exposes
+``plaster.get_loader(uri, name=None, defaults=None) to get this loader. It then exposes
 ``get_wsgi_app`` and ``get_wsgi_server``.
 
 .. code-block:: python
