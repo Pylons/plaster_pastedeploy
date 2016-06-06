@@ -2,7 +2,9 @@ import os
 import unittest
 
 # Testing Utilities
-from tests.fixture import *  # Manipulates sys.path. Must be before fakeapp.apps import
+
+# Manipulates sys.path. Must be before fakeapp.apps import
+from tests.fixture import *
 
 import fakeapp.apps
 
@@ -12,8 +14,8 @@ from plaster_pastedeploy import Loader
 # Testing Constants
 here = os.path.dirname(__file__)
 
-class TestSimpleURI(unittest.TestCase):
 
+class TestSimpleURI(unittest.TestCase):
     def setUp(self):
         self.loader = Loader('../sample_configs/basic_app.ini')
 
@@ -28,20 +30,18 @@ class TestSimpleURI(unittest.TestCase):
         same_app = self.loader.get_wsgi_app(relative_to=here)
         assert same_app is fakeapp.apps.basic_app
 
-class TestSectionedURI(TestSimpleURI):
 
+class TestSectionedURI(TestSimpleURI):
     def setUp(self):
         self.loader = Loader('../sample_configs/basic_app.ini#main')
 
 
 class TestSchemeAndSectionedURI(TestSimpleURI):
-
     def setUp(self):
         self.loader = Loader('config:../sample_configs/basic_app.ini#main')
 
 
 class TestRelativeURI(unittest.TestCase):
-
     def setUp(self):
         self.here = here
         os.chdir(os.path.join(here, '../sample_configs'))
@@ -61,15 +61,15 @@ class TestRelativeURI(unittest.TestCase):
         same_app = self.loader.get_wsgi_app()
         assert same_app is fakeapp.apps.basic_app
 
-class TestRelativeSectionedURI(TestRelativeURI):
 
+class TestRelativeSectionedURI(TestRelativeURI):
     def setUp(self):
         os.chdir(os.path.join(here, '../sample_configs'))
 
         self.loader = Loader('basic_app.ini#main')
 
-class TestRelativeSchemeAndSectionedURI(TestRelativeURI):
 
+class TestRelativeSchemeAndSectionedURI(TestRelativeURI):
     def setUp(self):
         os.chdir(os.path.join(here, '../sample_configs'))
 

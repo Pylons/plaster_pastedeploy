@@ -77,7 +77,7 @@ Ready to contribute? Here's how to set up `plaster_pastedeploy` for local develo
 
 5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
-    $ env/bin/flake8 plaster_pastedeploy tests
+    $ env/bin/flake8 plaster_pastedeploy
     $ python setup.py test or py.test
     $ tox
 

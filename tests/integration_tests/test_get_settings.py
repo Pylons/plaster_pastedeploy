@@ -2,8 +2,11 @@ import os
 import unittest
 
 # Testing Utilities
-from tests.fixture import *  # Manipulates sys.path. Must be before fakeapp.apps import
-import fakeapp.apps
+
+# # Manipulates sys.path. Must be before fakeapp.apps import
+# from tests.fixture import *
+#
+# import fakeapp.apps
 
 # Class under test
 from plaster_pastedeploy import Loader
@@ -13,7 +16,6 @@ here = os.path.dirname(__file__)
 
 
 class TestSimpleUri(unittest.TestCase):
-
     def setUp(self):
         os.chdir(here)
         self.loader = Loader('../sample_configs/test_settings.ini')
@@ -30,13 +32,15 @@ class TestSimpleUri(unittest.TestCase):
         self.assertRaises(KeyError, lambda: result['c'])
 
     def test_defaults_passed(self):
-        result = self.loader.get_settings('section1', defaults={'c': 'c_val', 'd': '%(b)s'})
+        result = self.loader.get_settings('section1',
+                                          defaults={'c': 'c_val', 'd': '%(b)s'})
         self.assertEqual(result['a'], 'default_a')
         self.assertEqual(result['b'], 'default_b')
         self.assertEqual(result['c'], 'default_a')
         self.assertEqual(result['d'], 'default_b')
 
-        result = self.loader.get_settings('section2', defaults={'c': 'c_val', 'd': '%(b)s'})
+        result = self.loader.get_settings('section2',
+                                          defaults={'c': 'c_val', 'd': '%(b)s'})
         self.assertEqual(result['a'], 'default_a')
         self.assertEqual(result['b'], 'b_val')
         self.assertEqual(result['c'], 'c_val')
@@ -60,8 +64,9 @@ class TestSectionedURI(TestSimpleUri):
         self.assertEqual(result['c'], 'default_a')
         self.assertEqual(result['d'], 'default_b')
 
-class TestFullURI(TestSectionedURI):
 
+class TestFullURI(TestSectionedURI):
     def setUp(self):
         os.chdir(here)
-        self.loader = Loader('config:../sample_configs/test_settings.ini#section1')
+        self.loader = Loader(
+            'config:../sample_configs/test_settings.ini#section1')

@@ -23,7 +23,7 @@ class Test_setup_logging(unittest.TestCase):
         initial_defaults = config_parser.call_args[1]['defaults']  # kwargs
         self.assertEquals(initial_defaults, None)
 
-        filepath, options = file_config.call_args[0] # args
+        filepath, options = file_config.call_args[0]  # args
         # os.path.abspath is a sop to Windows
         self.assertEqual(filepath, os.path.abspath('/abc'))
         self.assertEqual(options['__file__'], os.path.abspath('/abc'))
@@ -35,7 +35,7 @@ class Test_setup_logging(unittest.TestCase):
         initial_defaults = config_parser.call_args[1]['defaults']  # kwargs
         self.assertEquals(initial_defaults, {})
 
-        filepath, options = file_config.call_args[0] # args
+        filepath, options = file_config.call_args[0]  # args
         # os.path.abspath is a sop to Windows
         self.assertEqual(filepath, os.path.abspath('/abc'))
         self.assertEqual(options['__file__'], os.path.abspath('/abc'))

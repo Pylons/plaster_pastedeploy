@@ -2,7 +2,10 @@ import os
 import unittest
 
 # Test Utilities
-from tests.fixture import *  # Manipulates sys.path. Must be before fakeapp.apps import
+
+# Manipulates sys.path. Must be before fakeapp.apps import
+from tests.fixture import *
+
 import fakeapp.apps
 
 # Class under test
@@ -16,9 +19,11 @@ class TestSimpleURI(unittest.TestCase):
         self.loader = Loader('../sample_configs/test_filter.ini')
 
     def test_get_wsgi_app_main(self):
-        app_filter_factory = self.loader.get_wsgi_filter('filt', relative_to=here)
+        app_filter_factory = self.loader.get_wsgi_filter('filt',
+                                                         relative_to=here)
 
-        app = Loader('config:../sample_configs/basic_app.ini#main').get_wsgi_app(relative_to=here)
+        other_loader = Loader('config:../sample_configs/basic_app.ini#main')
+        app = other_loader.get_wsgi_app(relative_to=here)
         app_filter = app_filter_factory(app)
 
         assert isinstance(app_filter, fakeapp.apps.CapFilter)
@@ -33,7 +38,8 @@ class TestSectionedURI(TestSimpleURI):
     def test_get_wsgi_filter(self):
         app_filter_factory = self.loader.get_wsgi_filter(relative_to=here)
 
-        app = Loader('config:../sample_configs/basic_app.ini#main').get_wsgi_app(relative_to=here)
+        other_loader = Loader('config:../sample_configs/basic_app.ini#main')
+        app = other_loader.get_wsgi_app(relative_to=here)
         app_filter = app_filter_factory(app)
 
         assert isinstance(app_filter, fakeapp.apps.CapFilter)

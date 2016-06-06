@@ -1,6 +1,6 @@
-=======
+===================
 plaster_pastedeploy
-=======
+===================
 
 .. image:: https://img.shields.io/pypi/v/plaster_pastedeploy.svg
         :target: https://pypi.python.org/pypi/plaster_pastedeploy
@@ -21,9 +21,8 @@ Usage
 Applications should use ``plaster_pastedeploy`` to load settings from named sections in
 a configuration source (usually a file).
 
-Most applications will want to use
-``plaster.get_loader(uri, name=None, defaults=None) to get this loader. It then exposes
-``get_wsgi_app`` and ``get_wsgi_server``.
+Most applications will want to use ``plaster.get_loader(uri, name=None, defaults=None) to get this loader. It then
+exposes ``get_wsgi_app`` and ``get_wsgi_server``.
 
 .. code-block:: python
 

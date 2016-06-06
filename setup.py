@@ -17,6 +17,7 @@ install_requires = [
 
 docs_require = [
     'Sphinx',
+    'pylons-sphinx-themes',
 ]
 
 tests_require = [

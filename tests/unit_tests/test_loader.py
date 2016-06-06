@@ -6,7 +6,6 @@ import plaster_pastedeploy
 
 
 class TestLoader(unittest.TestCase):
-
     def setUp(self):
         self.loader = plaster_pastedeploy.Loader('config:myapp.ini#some_app')
         self.scheme = 'config'
@@ -22,16 +21,16 @@ class TestLoader(unittest.TestCase):
     def test_loader_init_name(self):
         self.assertEqual(self.loader.name, self.name)
 
-class TestSimpleURI(TestLoader):
 
+class TestSimpleURI(TestLoader):
     def setUp(self):
         self.loader = plaster_pastedeploy.Loader('myapp.ini')
         self.scheme = 'config'
         self.uri = 'myapp.ini'
         self.name = None
 
-class TestOtherScheme(TestLoader):
 
+class TestOtherScheme(TestLoader):
     def setUp(self):
         self.loader = plaster_pastedeploy.Loader('egg:myapp.ini#main')
         self.scheme = 'egg'
@@ -40,7 +39,6 @@ class TestOtherScheme(TestLoader):
 
 
 class TestMaybeGetDefaultRelativeTo(unittest.TestCase):
-
     def test_relative_path(self):
         self.loader = plaster_pastedeploy.Loader('config:foo/bar.ini#test_app')
 
@@ -61,7 +59,6 @@ class TestMaybeGetDefaultRelativeTo(unittest.TestCase):
 
 
 class TestMaybeGetDefaultName(unittest.TestCase):
-
     def test_none_name(self):
         self.loader = plaster_pastedeploy.Loader('config:foo/bar.ini#test_app')
 
@@ -78,8 +75,8 @@ class TestMaybeGetDefaultName(unittest.TestCase):
         result = self.loader._maybe_get_default_name('other_app')
         self.assertEqual(result, 'other_app')
 
-class TestPasteDeployURI(unittest.TestCase):
 
+class TestPasteDeployURI(unittest.TestCase):
     def test_full_uri(self):
         self.loader = plaster_pastedeploy.Loader('config:foo.ini#test_app')
         self.assertEqual(self.loader._pastedeploy_uri, 'config:foo.ini')
@@ -91,4 +88,3 @@ class TestPasteDeployURI(unittest.TestCase):
     def test_uri_with_scheme(self):
         self.loader = plaster_pastedeploy.Loader('egg:foo.ini')
         self.assertEqual(self.loader._pastedeploy_uri, 'egg:foo.ini')
-
