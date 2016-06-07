@@ -240,6 +240,9 @@ class Loader(object):
 
         return name
 
+    def __repr__(self):
+        return 'plaster_pastedeploy.Loader(uri="{}")'.format(self.uri)
+
 
 class ConfigDict(OrderedDict, loadwsgi.AttrDict):
     """A subclass to use so that the return values for getting settings can be

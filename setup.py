@@ -59,6 +59,6 @@ setup(
     ],
     entry_points="""\
     [plaster.loader]
-    ini+pastedeploy=plaster_pastedeploy.Loader
+    ini+pastedeploy=plaster_pastedeploy:Loader
     """
 )
