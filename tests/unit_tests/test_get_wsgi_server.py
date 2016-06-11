@@ -1,10 +1,7 @@
 import os
+import mock
+import plaster
 import unittest
-
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
 
 # Package under test
 import plaster_pastedeploy

@@ -1,4 +1,5 @@
 import os
+import plaster
 import unittest
 
 # Testing Utilities
@@ -17,7 +18,8 @@ here = os.path.dirname(__file__)
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        self.loader = Loader('../sample_configs/basic_app.ini')
+        uri = plaster.parse_uri('../sample_configs/basic_app.ini')
+        self.loader = Loader(uri)
 
     def test_get_wsgi_app_with_relative(self):
         app = self.loader.get_wsgi_app(relative_to=here)
@@ -33,19 +35,22 @@ class TestSimpleURI(unittest.TestCase):
 
 class TestSectionedURI(TestSimpleURI):
     def setUp(self):
-        self.loader = Loader('../sample_configs/basic_app.ini#main')
+        uri = plaster.parse_uri('../sample_configs/basic_app.ini#main')
+        self.loader = Loader(uri)
 
 
 class TestSchemeAndSectionedURI(TestSimpleURI):
     def setUp(self):
-        self.loader = Loader('config:../sample_configs/basic_app.ini#main')
+        uri = plaster.parse_uri('config:../sample_configs/basic_app.ini#main')
+        self.loader = Loader(uri)
 
 
 class TestRelativeURI(unittest.TestCase):
     def setUp(self):
         self.here = here
         os.chdir(os.path.join(here, '../sample_configs'))
-        self.loader = Loader('basic_app.ini')
+        uri = plaster.parse_uri('basic_app.ini')
+        self.loader = Loader(uri)
 
     def teadDown(self):
         os.chdir(self.here)
@@ -65,12 +70,12 @@ class TestRelativeURI(unittest.TestCase):
 class TestRelativeSectionedURI(TestRelativeURI):
     def setUp(self):
         os.chdir(os.path.join(here, '../sample_configs'))
-
-        self.loader = Loader('basic_app.ini#main')
+        uri = plaster.parse_uri('basic_app.ini#main')
+        self.loader = Loader(uri)
 
 
 class TestRelativeSchemeAndSectionedURI(TestRelativeURI):
     def setUp(self):
         os.chdir(os.path.join(here, '../sample_configs'))
-
-        self.loader = Loader('config:basic_app.ini#main')
+        uri = plaster.parse_uri('config:basic_app.ini#main')
+        self.loader = Loader(uri)

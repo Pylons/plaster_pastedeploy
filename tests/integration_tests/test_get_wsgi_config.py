@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import os
+import plaster
 import unittest
 
 # Test Utilities
@@ -22,7 +23,8 @@ config_filename = os.path.join(config_path, 'test_config.ini')
 
 class TestFullURI(unittest.TestCase):
     def setUp(self):
-        self.loader = Loader('config:../sample_configs/test_config.ini')
+        uri = plaster.parse_uri('config:../sample_configs/test_config.ini')
+        self.loader = Loader(uri)
 
     def test_get_wsgi_app_config(self):
         conf = self.loader.get_wsgi_app_config('test_get', relative_to=here)
@@ -52,7 +54,8 @@ class TestFullURI(unittest.TestCase):
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        self.loader = Loader('test_filter_with.ini')
+        uri = plaster.parse_uri('test_filter_with.ini')
+        self.loader = Loader(uri)
 
     def test_get_wsgi_app_config(self):
         conf = self.loader.get_wsgi_app_config(relative_to=config_path)

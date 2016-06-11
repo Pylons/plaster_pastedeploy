@@ -1,4 +1,5 @@
 import os
+import plaster
 import unittest
 
 # Test Utilities
@@ -16,7 +17,8 @@ here = os.path.dirname(__file__)
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        self.loader = Loader('../sample_configs/test_filter.ini')
+        uri = plaster.parse_uri('../sample_configs/test_filter.ini')
+        self.loader = Loader(uri)
 
     def test_get_wsgi_app_main(self):
         app_filter_factory = self.loader.get_wsgi_filter('filt',
@@ -33,7 +35,8 @@ class TestSimpleURI(unittest.TestCase):
 
 class TestSectionedURI(TestSimpleURI):
     def setUp(self):
-        self.loader = Loader('../sample_configs/test_filter.ini#filt')
+        uri = plaster.parse_uri('../sample_configs/test_filter.ini#filt')
+        self.loader = Loader(uri)
 
     def test_get_wsgi_filter(self):
         app_filter_factory = self.loader.get_wsgi_filter(relative_to=here)
@@ -49,4 +52,5 @@ class TestSectionedURI(TestSimpleURI):
 
 class TestSchemeAndSectionedURI(TestSectionedURI):
     def setUp(self):
-        self.loader = Loader('config:../sample_configs/test_filter.ini#filt')
+        uri = plaster.parse_uri('config:../sample_configs/test_filter.ini#filt')
+        self.loader = Loader(uri)

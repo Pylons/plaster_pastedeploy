@@ -1,4 +1,5 @@
 import unittest
+import plaster
 import os
 
 # Package under test
@@ -7,7 +8,8 @@ import plaster_pastedeploy
 
 class TestLoader(unittest.TestCase):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader('config:myapp.ini#some_app')
+        uri = plaster.parse_uri('config:myapp.ini#some_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
         self.scheme = 'config'
         self.uri = 'myapp.ini'
         self.name = 'some_app'
@@ -24,7 +26,8 @@ class TestLoader(unittest.TestCase):
 
 class TestSimpleURI(TestLoader):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader('myapp.ini')
+        uri = plaster.parse_uri('myapp.ini')
+        self.loader = plaster_pastedeploy.Loader(uri)
         self.scheme = 'config'
         self.uri = 'myapp.ini'
         self.name = None
@@ -32,7 +35,8 @@ class TestSimpleURI(TestLoader):
 
 class TestOtherScheme(TestLoader):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader('egg:myapp.ini#main')
+        uri = plaster.parse_uri('egg:myapp.ini#main')
+        self.loader = plaster_pastedeploy.Loader(uri)
         self.scheme = 'egg'
         self.name = 'main'
         self.uri = 'myapp.ini'
@@ -40,7 +44,8 @@ class TestOtherScheme(TestLoader):
 
 class TestMaybeGetDefaultRelativeTo(unittest.TestCase):
     def test_relative_path(self):
-        self.loader = plaster_pastedeploy.Loader('config:foo/bar.ini#test_app')
+        uri = plaster.parse_uri('config:foo/bar.ini#test_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
         result = self.loader._maybe_get_default_relative_to(None)
         self.assertEqual(result, os.getcwd())
@@ -49,7 +54,8 @@ class TestMaybeGetDefaultRelativeTo(unittest.TestCase):
         self.assertEqual(result, os.getcwd())
 
     def test_absolute_path(self):
-        self.loader = plaster_pastedeploy.Loader('config:/foo/bar.ini#')
+        uri = plaster.parse_uri('config:/foo/bar.ini#')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
         result = self.loader._maybe_get_default_relative_to(None)
         self.assertEqual(result, None)
@@ -60,17 +66,20 @@ class TestMaybeGetDefaultRelativeTo(unittest.TestCase):
 
 class TestMaybeGetDefaultName(unittest.TestCase):
     def test_none_name(self):
-        self.loader = plaster_pastedeploy.Loader('config:foo/bar.ini#test_app')
+        uri = plaster.parse_uri('config:foo/bar.ini#test_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
         result = self.loader._maybe_get_default_name(None)
         self.assertEqual(result, 'test_app')
 
-        self.loader = plaster_pastedeploy.Loader('foo.ini')
+        uri = plaster.parse_uri('foo.ini')
+        self.loader = plaster_pastedeploy.Loader(uri)
         result = self.loader._maybe_get_default_name(None)
         self.assertEqual(result, None)
 
     def test_explicit_name(self):
-        self.loader = plaster_pastedeploy.Loader('foo.ini#test_app')
+        uri = plaster.parse_uri('foo.ini#test_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
         result = self.loader._maybe_get_default_name('other_app')
         self.assertEqual(result, 'other_app')
@@ -78,13 +87,16 @@ class TestMaybeGetDefaultName(unittest.TestCase):
 
 class TestPasteDeployURI(unittest.TestCase):
     def test_full_uri(self):
-        self.loader = plaster_pastedeploy.Loader('config:foo.ini#test_app')
+        uri = plaster.parse_uri('config:foo.ini#test_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
         self.assertEqual(self.loader._pastedeploy_uri, 'config:foo.ini')
 
     def test_simple_uri(self):
-        self.loader = plaster_pastedeploy.Loader('foo.ini')
+        uri = plaster.parse_uri('foo.ini')
+        self.loader = plaster_pastedeploy.Loader(uri)
         self.assertEqual(self.loader._pastedeploy_uri, 'config:foo.ini')
 
     def test_uri_with_scheme(self):
-        self.loader = plaster_pastedeploy.Loader('egg:foo.ini')
+        uri = plaster.parse_uri('egg:foo.ini')
+        self.loader = plaster_pastedeploy.Loader(uri)
         self.assertEqual(self.loader._pastedeploy_uri, 'egg:foo.ini')
