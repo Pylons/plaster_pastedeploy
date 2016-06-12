@@ -18,8 +18,7 @@ here = os.path.dirname(__file__)
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        uri = plaster.parse_uri('../sample_configs/basic_app.ini')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('../sample_configs/basic_app.ini')
 
     def test_get_wsgi_app_with_relative(self):
         app = self.loader.get_wsgi_app(relative_to=here)
@@ -35,22 +34,20 @@ class TestSimpleURI(unittest.TestCase):
 
 class TestSectionedURI(TestSimpleURI):
     def setUp(self):
-        uri = plaster.parse_uri('../sample_configs/basic_app.ini#main')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('../sample_configs/basic_app.ini#main')
 
 
 class TestSchemeAndSectionedURI(TestSimpleURI):
     def setUp(self):
-        uri = plaster.parse_uri('config:../sample_configs/basic_app.ini#main')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader(
+            'config:../sample_configs/basic_app.ini#main')
 
 
 class TestRelativeURI(unittest.TestCase):
     def setUp(self):
         self.here = here
         os.chdir(os.path.join(here, '../sample_configs'))
-        uri = plaster.parse_uri('basic_app.ini')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('basic_app.ini')
 
     def teadDown(self):
         os.chdir(self.here)
@@ -70,12 +67,10 @@ class TestRelativeURI(unittest.TestCase):
 class TestRelativeSectionedURI(TestRelativeURI):
     def setUp(self):
         os.chdir(os.path.join(here, '../sample_configs'))
-        uri = plaster.parse_uri('basic_app.ini#main')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('basic_app.ini#main')
 
 
 class TestRelativeSchemeAndSectionedURI(TestRelativeURI):
     def setUp(self):
         os.chdir(os.path.join(here, '../sample_configs'))
-        uri = plaster.parse_uri('config:basic_app.ini#main')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('config:basic_app.ini#main')

@@ -17,14 +17,14 @@ here = os.path.dirname(__file__)
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        uri = plaster.parse_uri('../sample_configs/test_filter.ini')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('../sample_configs/test_filter.ini')
 
     def test_get_wsgi_app_main(self):
-        app_filter_factory = self.loader.get_wsgi_filter('filt',
-                                                         relative_to=here)
+        app_filter_factory = self.loader.get_wsgi_filter(
+            'filt', relative_to=here)
 
-        other_loader = Loader('config:../sample_configs/basic_app.ini#main')
+        other_loader = plaster.get_loader(
+            'config:../sample_configs/basic_app.ini#main')
         app = other_loader.get_wsgi_app(relative_to=here)
         app_filter = app_filter_factory(app)
 
@@ -35,13 +35,14 @@ class TestSimpleURI(unittest.TestCase):
 
 class TestSectionedURI(TestSimpleURI):
     def setUp(self):
-        uri = plaster.parse_uri('../sample_configs/test_filter.ini#filt')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader(
+            '../sample_configs/test_filter.ini#filt')
 
     def test_get_wsgi_filter(self):
         app_filter_factory = self.loader.get_wsgi_filter(relative_to=here)
 
-        other_loader = Loader('config:../sample_configs/basic_app.ini#main')
+        other_loader = plaster.get_loader(
+            'config:../sample_configs/basic_app.ini#main')
         app = other_loader.get_wsgi_app(relative_to=here)
         app_filter = app_filter_factory(app)
 
@@ -52,5 +53,5 @@ class TestSectionedURI(TestSimpleURI):
 
 class TestSchemeAndSectionedURI(TestSectionedURI):
     def setUp(self):
-        uri = plaster.parse_uri('config:../sample_configs/test_filter.ini#filt')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader(
+            'config:../sample_configs/test_filter.ini#filt')

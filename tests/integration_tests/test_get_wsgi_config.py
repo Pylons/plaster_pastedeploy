@@ -23,8 +23,8 @@ config_filename = os.path.join(config_path, 'test_config.ini')
 
 class TestFullURI(unittest.TestCase):
     def setUp(self):
-        uri = plaster.parse_uri('config:../sample_configs/test_config.ini')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader(
+            'config:../sample_configs/test_config.ini')
 
     def test_get_wsgi_app_config(self):
         conf = self.loader.get_wsgi_app_config('test_get', relative_to=here)
@@ -54,8 +54,7 @@ class TestFullURI(unittest.TestCase):
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        uri = plaster.parse_uri('test_filter_with.ini')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('test_filter_with.ini')
 
     def test_get_wsgi_app_config(self):
         conf = self.loader.get_wsgi_app_config(relative_to=config_path)

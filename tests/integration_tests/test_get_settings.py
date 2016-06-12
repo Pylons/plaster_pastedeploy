@@ -19,8 +19,7 @@ here = os.path.dirname(__file__)
 class TestSimpleUri(unittest.TestCase):
     def setUp(self):
         os.chdir(here)
-        uri = plaster.parse_uri('../sample_configs/test_settings.ini')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader('../sample_configs/test_settings.ini')
 
     def test_no_defaults_passed(self):
         result = self.loader.get_settings('section1')
@@ -52,8 +51,8 @@ class TestSimpleUri(unittest.TestCase):
 class TestSectionedURI(TestSimpleUri):
     def setUp(self):
         os.chdir(here)
-        uri = plaster.parse_uri('../sample_configs/test_settings.ini#section1')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader(
+            '../sample_configs/test_settings.ini#section1')
 
     def test_no_section_name_passed(self):
         result = self.loader.get_settings()
@@ -71,5 +70,5 @@ class TestSectionedURI(TestSimpleUri):
 class TestFullURI(TestSectionedURI):
     def setUp(self):
         os.chdir(here)
-        uri = plaster.parse_uri('config:../sample_configs/test_settings.ini#section1')
-        self.loader = Loader(uri)
+        self.loader = plaster.get_loader(
+            'config:../sample_configs/test_settings.ini#section1')
