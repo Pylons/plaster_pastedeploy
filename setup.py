@@ -65,6 +65,8 @@ setup(
     entry_points={
         'plaster.loader': [
             'ini+pastedeploy=plaster_pastedeploy:Loader',
+            'config+pastedeploy=plaster_pastedeploy:Loader',
+            'call+pastedeploy=plaster_pastedeploy:Loader',
         ],
     },
 )

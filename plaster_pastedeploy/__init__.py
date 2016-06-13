@@ -29,9 +29,20 @@ class Loader(LoaderBase):
     :ivar uri: A :class:`plaster.PlasterURL` instance.
 
     """
+
     def __init__(self, uri):
         LoaderBase.__init__(self, uri)
-        self.pastedeploy_spec = 'config:' + uri.path
+
+        self.pastedeploy_spec = self._pastedeploy_scheme() + uri.path
+
+    def _pastedeploy_scheme(self):
+        scheme = 'config'
+        if self.uri.scheme.startswith('egg'):
+            scheme = 'egg'
+        elif self.uri.scheme.startswith('call'):
+            scheme = 'call'
+
+        return "{0}:".format(scheme)
 
     def _get_parser(self, defaults=None):
         parser = loadwsgi.NicerConfigParser(self.uri.path, defaults=defaults)
@@ -66,7 +77,7 @@ class Loader(LoaderBase):
 
         """
         name = self._maybe_get_default_name(section)
-        parser = self._get_parser()
+        parser = self._get_parser(defaults=defaults)
         try:
             return OrderedDict(parser.items(name))
         except configparser.NoSectionError:

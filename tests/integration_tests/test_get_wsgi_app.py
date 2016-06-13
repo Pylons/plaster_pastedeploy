@@ -45,12 +45,12 @@ class TestSchemeAndSectionedURI(TestSimpleURI):
 
 class TestRelativeURI(unittest.TestCase):
     def setUp(self):
-        self.here = here
+        self.original_cwd = os.getcwd()
         os.chdir(os.path.join(here, '../sample_configs'))
         self.loader = plaster.get_loader('basic_app.ini')
 
     def teadDown(self):
-        os.chdir(self.here)
+        os.chdir(self.original_cwd)
 
     def test_get_wsgi_app_no_args(self):
         app = self.loader.get_wsgi_app()
@@ -66,11 +66,13 @@ class TestRelativeURI(unittest.TestCase):
 
 class TestRelativeSectionedURI(TestRelativeURI):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(os.path.join(here, '../sample_configs'))
         self.loader = plaster.get_loader('basic_app.ini#main')
 
 
 class TestRelativeSchemeAndSectionedURI(TestRelativeURI):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(os.path.join(here, '../sample_configs'))
         self.loader = plaster.get_loader('config:basic_app.ini#main')
