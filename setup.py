@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 import os
 
-here = os.path.abspath(os.path.dirname(__file__))
+here = os.path.dirname(__file__)
 try:
     with open(os.path.join(here, 'README.rst')) as f:
         readme = f.read()
     with open(os.path.join(here, 'CHANGES.txt')) as f:
-        CHANGES = f.read()
+        changes = f.read()
 except IOError:
     readme = changes = ''
 
