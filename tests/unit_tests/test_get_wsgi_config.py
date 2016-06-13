@@ -99,7 +99,7 @@ class TestHashedURI(unittest.TestCase):
 
 class TestFullURI(TestHashedURI):
     def setUp(self):
-        uri = plaster.parse_uri('config:/foo/bar/myapp.ini#my_app')
+        uri = plaster.parse_uri('/foo/bar/myapp.ini#my_app')
         self.loader = plaster_pastedeploy.Loader(uri)
 
 

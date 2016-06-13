@@ -29,6 +29,10 @@ class Loader(LoaderBase):
     :ivar uri: A :class:`plaster.PlasterURL` instance.
 
     """
+    def __init__(self, uri):
+        LoaderBase.__init__(self, uri)
+        self.pastedeploy_spec = 'config:' + uri.path
+
     def _get_parser(self, defaults=None):
         parser = loadwsgi.NicerConfigParser(self.uri.path, defaults=defaults)
         parser.optionxform = str
@@ -88,7 +92,7 @@ class Loader(LoaderBase):
         """
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
-        return loadapp(self.path,
+        return loadapp(self.pastedeploy_spec,
                        name=name,
                        relative_to=relative_to,
                        global_conf=defaults)
@@ -113,7 +117,7 @@ class Loader(LoaderBase):
         """
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
-        return loadserver(self.path,
+        return loadserver(self.pastedeploy_spec,
                           name=name,
                           relative_to=relative_to,
                           global_conf=defaults)
@@ -136,7 +140,7 @@ class Loader(LoaderBase):
         """
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
-        return loadfilter(self.path,
+        return loadfilter(self.pastedeploy_spec,
                           name=name,
                           relative_to=relative_to,
                           global_conf=defaults)
@@ -173,7 +177,7 @@ class Loader(LoaderBase):
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
         conf = appconfig(
-            self._pastedeploy_uri,
+            self.pastedeploy_spec,
             name=name,
             relative_to=relative_to,
             global_conf=defaults)

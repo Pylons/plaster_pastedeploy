@@ -1,5 +1,6 @@
 import mock
 import os
+import plaster
 import unittest
 
 # Object Under Test
@@ -11,7 +12,8 @@ from plaster_pastedeploy import Loader
 class Test_setup_logging(unittest.TestCase):
 
     def setUp(self):
-        self.loader = Loader('/abc')
+        uri = plaster.parse_uri('/abc.ini')
+        self.loader = Loader(uri)
 
     def test_it_no_global_conf(self, config_parser, file_config):
         self.loader.setup_logging()
@@ -21,8 +23,8 @@ class Test_setup_logging(unittest.TestCase):
 
         filepath, options = file_config.call_args[0]  # args
         # os.path.abspath is a sop to Windows
-        self.assertEqual(filepath, os.path.abspath('/abc'))
-        self.assertEqual(options['__file__'], os.path.abspath('/abc'))
+        self.assertEqual(filepath, os.path.abspath('/abc.ini'))
+        self.assertEqual(options['__file__'], os.path.abspath('/abc.ini'))
         self.assertEqual(options['here'], os.path.abspath('/'))
 
     def test_it_global_conf_empty(self, config_parser, file_config):
@@ -33,8 +35,8 @@ class Test_setup_logging(unittest.TestCase):
 
         filepath, options = file_config.call_args[0]  # args
         # os.path.abspath is a sop to Windows
-        self.assertEqual(filepath, os.path.abspath('/abc'))
-        self.assertEqual(options['__file__'], os.path.abspath('/abc'))
+        self.assertEqual(filepath, os.path.abspath('/abc.ini'))
+        self.assertEqual(options['__file__'], os.path.abspath('/abc.ini'))
         self.assertEqual(options['here'], os.path.abspath('/'))
 
     def test_it_global_conf_not_empty(self, config_parser, file_config):
@@ -45,8 +47,8 @@ class Test_setup_logging(unittest.TestCase):
 
         filepath, options = file_config.call_args[0]  # args
         # os.path.abspath is a sop to Windows
-        self.assertEqual(filepath, os.path.abspath('/abc'))
-        self.assertEqual(options['__file__'], os.path.abspath('/abc'))
+        self.assertEqual(filepath, os.path.abspath('/abc.ini'))
+        self.assertEqual(options['__file__'], os.path.abspath('/abc.ini'))
         self.assertEqual(options['here'], os.path.abspath('/'))
         self.assertEqual(options['key'], 'val')
 
