@@ -1,4 +1,5 @@
 import os
+import plaster
 import unittest
 
 # Testing Utilities
@@ -17,8 +18,14 @@ here = os.path.dirname(__file__)
 
 class TestSimpleUri(unittest.TestCase):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(here)
-        self.loader = Loader('../sample_configs/test_settings.ini')
+
+        self.loader = plaster.get_loader('../sample_configs/test_settings.ini')
+
+    def tearDown(self):
+        os.chdir(self.original_cwd)
+
 
     def test_no_defaults_passed(self):
         result = self.loader.get_settings('section1')
@@ -49,8 +56,11 @@ class TestSimpleUri(unittest.TestCase):
 
 class TestSectionedURI(TestSimpleUri):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(here)
-        self.loader = Loader('../sample_configs/test_settings.ini#section1')
+
+        self.loader = plaster.get_loader(
+            '../sample_configs/test_settings.ini#section1')
 
     def test_no_section_name_passed(self):
         result = self.loader.get_settings()
@@ -59,6 +69,7 @@ class TestSectionedURI(TestSimpleUri):
         self.assertEqual(result['c'], 'default_a')
 
         result = self.loader.get_settings(defaults={'c': 'c_val', 'd': '%(b)s'})
+
         self.assertEqual(result['a'], 'default_a')
         self.assertEqual(result['b'], 'default_b')
         self.assertEqual(result['c'], 'default_a')
@@ -67,6 +78,7 @@ class TestSectionedURI(TestSimpleUri):
 
 class TestFullURI(TestSectionedURI):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(here)
-        self.loader = Loader(
+        self.loader = plaster.get_loader(
             'config:../sample_configs/test_settings.ini#section1')

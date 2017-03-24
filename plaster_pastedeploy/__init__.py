@@ -1,7 +1,6 @@
 from collections import OrderedDict
 from logging.config import fileConfig
 import os
-from plaster_pastedeploy.compat import configparser
 
 # Cover the top level paste.deploy API
 from paste.deploy import (
@@ -10,41 +9,61 @@ from paste.deploy import (
     loadfilter,
     appconfig,
 )
-
-# This is being imported so that we can sub class loadwsgi.AttrDict so we won't
-# break existing isinstance callers on the return value from getting an app
-# configuration.
 import paste.deploy.loadwsgi as loadwsgi
 
+from plaster import (
+    NoSectionError,
+    Loader as LoaderBase,
+)
 
-class Loader(object):
-    """This is a loader conforming to the required interface defined by
+from .compat import configparser
+
+
+class Loader(LoaderBase):
+    """
+    This is a loader conforming to the required interface defined by
     :class:`plaster.interfaces.Loader`. Given a uri to a configuration source,
-    this can load and return wsgi applications, servers, filters and settings
+    this can load and return WSGI applications, servers, filters and settings
     from .ini files written against the PasteDeploy spec.
 
-    :ivar uri: A specification for the configuration source formatted as
-        "{scheme}:{file path}#{named section}. the scheme and named section
-        portions are optional and will get defaults during loading.
+    :ivar uri: A :class:`plaster.PlasterURL` instance.
+
     """
 
     def __init__(self, uri):
-        if '#' in uri:
-            uri, name = uri.split('#', 1)
-        else:
-            name = None
+        LoaderBase.__init__(self, uri)
 
-        if ':' in uri:
-            scheme, uri = uri.split(':', 1)
-        else:
-            scheme = 'config'
+        self.pastedeploy_spec = self._pastedeploy_scheme() + uri.path
 
-        self.uri = uri
-        self.name = name
-        self.scheme = scheme
+    def _pastedeploy_scheme(self):
+        scheme = 'config'
+        if self.uri.scheme.startswith('egg'):
+            scheme = 'egg'
+        elif self.uri.scheme.startswith('call'):
+            scheme = 'call'
 
-    def get_settings(self, name=None, defaults=None):
-        """Gets a named section from the configuration source. ``name`` must
+        return "{0}:".format(scheme)
+
+    def _get_parser(self, defaults=None):
+        parser = loadwsgi.NicerConfigParser(self.uri.path, defaults=defaults)
+        parser.optionxform = str
+        with open(parser.filename) as fp:
+            parser.read_file(fp)
+        return parser
+
+    def get_sections(self):
+        """
+        Find all of the sections in the config file.
+
+        :return: A list of the section names in the file.
+
+        """
+        parser = self._get_parser()
+        return parser.sections()
+
+    def get_settings(self, section=None, defaults=None):
+        """
+        Gets a named section from the configuration source. ``name`` must
         either be included in the ``uri`` passed to the class during
         instantiation, or must be passed to get settings.
 
@@ -55,45 +74,48 @@ class Loader(object):
             section.
         :return: A :class:`collections.OrderedDict` with key value pairs as
             parsed by :class:`configparser.ConfigParser`.
+
         """
-        name = self._maybe_get_default_name(name)
-
-        parser = configparser.ConfigParser(defaults=defaults)
-        parser.read([self.uri])
-
-        return OrderedDict(parser.items(name))
+        name = self._maybe_get_default_name(section)
+        parser = self._get_parser(defaults=defaults)
+        try:
+            return OrderedDict(parser.items(name))
+        except configparser.NoSectionError:
+            raise NoSectionError
 
     def get_wsgi_app(self, name=None, defaults=None, relative_to=None):
-        """Reads the configuration source and finds and loads a wsgi application
-        defined by the entry with name ``name`` per the PasteDeploy
-        configuration format and loading mechanism.
+        """
+        Reads the configuration source and finds and loads a WSGI
+        application defined by the entry with name ``name`` per the
+        PasteDeploy configuration format and loading mechanism.
 
-        :param name: The named wsgi app to find, load and return. Defaults to
-            ``None`` which becomes ``main`` inside :func:`paste.deploy.loadapp`.
+        :param name: The named WSGI app to find, load and return. Defaults to
+            ``None`` which becomes ``main`` inside
+            :func:`paste.deploy.loadapp`.
         :param defaults: The ``global_conf`` that will be used during app
             instantiation.
         :param relative_to: A path indicating what path the uri configuration
             file is relative to. Defaults to ``None`` and may be be set
             internally to :func:`os.getcwd` if ``self.uri`` is not an absolute
             path.
-        :return: A wsgi application.
+        :return: A WSGI application.
+
         """
         name = self._maybe_get_default_name(name)
-
         relative_to = self._maybe_get_default_relative_to(relative_to)
-
-        return loadapp(self._pastedeploy_uri,
+        return loadapp(self.pastedeploy_spec,
                        name=name,
                        relative_to=relative_to,
                        global_conf=defaults)
 
     def get_wsgi_server(self, name=None, defaults=None, relative_to=None):
-        """Reads the configuration source and finds and loads a wsgi server
+        """
+        Reads the configuration source and finds and loads a WSGI server
         defined by the server entry with the name ``name`` per the PasteDeploy
         configuration format and loading mechanism.
 
-        :param name: The named wsgi server to find, load and return. Defaults to
-            ``None`` which becomes ``main`` inside
+        :param name: The named WSGI server to find, load and return. Defaults
+            to ``None`` which becomes ``main`` inside
             :func:`paste.deploy.loadserver`.
         :param defaults: The ``global_conf`` that will be used during server
             instantiation.
@@ -101,24 +123,23 @@ class Loader(object):
             file is relative to. Defaults to ``None`` and may be be set
             internally to :func:`os.getcwd` if ``self.uri`` is not an absolute
             path.
-        :return: A wsgi server.
-        """
+        :return: A WSGI server runner callable which accepts a WSGI app.
 
+        """
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
-
-        return loadserver(self._pastedeploy_uri,
+        return loadserver(self.pastedeploy_spec,
                           name=name,
                           relative_to=relative_to,
                           global_conf=defaults)
 
     def get_wsgi_filter(self, name=None, defaults=None, relative_to=None):
-        """Reads the configuration soruce and finds and loads a wsgi filter
+        """Reads the configuration soruce and finds and loads a WSGI filter
         defined by the filter entry with the name ``name`` per the PasteDeploy
         configuration format and loading mechanism.
 
-        :param name: The named wsgi filter to find, load and return. Defaults to
-            ``None`` which becomes ``main`` inside
+        :param name: The named WSGI filter to find, load and return. Defaults
+            to ``None`` which becomes ``main`` inside
             :func:`paste.deploy.loadfilter`.
         :param defaults: The ``global_conf`` that will be used during filter
             instantiation.
@@ -126,19 +147,18 @@ class Loader(object):
             file is relative to. Defaults to ``None`` and may be be set
             internally to :func:`os.getcwd` if ``self.uri`` is not an absolute
             path.
-        :return: A callable that can filter a wsgi application.
+        :return: A callable that can filter a WSGI application.
         """
-
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
-
-        return loadfilter(self._pastedeploy_uri,
+        return loadfilter(self.pastedeploy_spec,
                           name=name,
                           relative_to=relative_to,
                           global_conf=defaults)
 
     def get_wsgi_app_config(self, name=None, defaults=None, relative_to=None):
-        """Return an :class:`collections.OrderedDict` representing the
+        """
+        Return an :class:`collections.OrderedDict` representing the
         application config for a WSGI application named ``name`` in the
         PasteDeploy config file specified by ``self.uri``.
 
@@ -153,8 +173,8 @@ class Loader(object):
         If ``relative_to`` is None and ``self.uri`` is not an absolute path,
         ``relative_to`` will be set to the current working directory.
 
-        :param name: The named wsgi app for which to find the settings. Defaults
-            to ``None`` which becomes ``main``
+        :param name: The named WSGI app for which to find the settings.
+            Defaults to ``None`` which becomes ``main``
             inside :func:`paste.deploy.loadapp`.
         :param defaults: The ``global_conf`` that will be used during settings
             generation.
@@ -163,23 +183,21 @@ class Loader(object):
             internally to :func:`os.getcwd` if ``self.uri`` is not an absolute
             path.
         :return: :class:`plaster_pastedeploy.ConfigDict`.
-        """
 
+        """
         name = self._maybe_get_default_name(name)
         relative_to = self._maybe_get_default_relative_to(relative_to)
-
         conf = appconfig(
-            self._pastedeploy_uri,
+            self.pastedeploy_spec,
             name=name,
             relative_to=relative_to,
             global_conf=defaults)
-
         conf = _ordered_dict_from_attr_dict(conf)
-
         return conf
 
     def setup_logging(self, defaults=None):
-        """Set up logging via :func:`logging.config.fileConfig`.
+        """
+        Set up logging via :func:`logging.config.fileConfig`.
 
         Defaults are specified for the special ``__file__`` and ``here``
         variables, similar to PasteDeploy config loading. Extra defaults can
@@ -188,40 +206,28 @@ class Loader(object):
         :param defaults: The defaults that will be used when passed to
             :func:`logging.config.fileConfig`.
         :return: ``None``.
+
         """
-
-        parser = configparser.ConfigParser(defaults=defaults)
-        parser.read([self.uri])
-
-        if parser.has_section('loggers'):
-
-            config_file = os.path.abspath(self.uri)
-
+        if 'loggers' in self.get_sections():
+            config_file = os.path.abspath(self.uri.path)
             full_conf = {
                 '__file__': config_file,
                 'here': os.path.dirname(config_file)
             }
-
             if defaults is not None:
                 full_conf.update(defaults)
 
             fileConfig(config_file, full_conf)
 
-    @property
-    def _pastedeploy_uri(self):
-        """Returns the ``self.uri`` with the scheme ``config`` prepended to the
-        uri so that PasteDeploy dispatches to the correct loading functions.
-        """
-        return "{}:{}".format(self.scheme, self.uri)
-
     def _maybe_get_default_relative_to(self, relative_to):
         """Returns either ``relative_to`` or the value of :func:`os.getcwd` if
-        ``relative_to was unset and ``self.uri`` is not an absolute path.
+        ``relative_to`` was unset and ``self.uri`` is not an absolute path.
+
         :param relative_to: The relative_to argument to check.
-        :return: Either None or a default path.
+        :return: Either ``None`` or a default path.
         """
 
-        is_absolute_path = os.path.isabs(self.uri)
+        is_absolute_path = os.path.isabs(self.uri.path)
 
         if not is_absolute_path and relative_to is None:
             # Default to the current working directory
@@ -235,13 +241,13 @@ class Loader(object):
         :param name: The current name to check.
         :return: Either None or a :class:`str` representing the name.
         """
-        if name is None and self.name is not None:
-            name = self.name
+        if name is None and self.uri.fragment is not None:
+            name = self.uri.fragment
 
         return name
 
     def __repr__(self):
-        return 'plaster_pastedeploy.Loader(uri="{}")'.format(self.uri)
+        return 'plaster_pastedeploy.Loader(uri="{0}")'.format(self.uri)
 
 
 class ConfigDict(OrderedDict, loadwsgi.AttrDict):

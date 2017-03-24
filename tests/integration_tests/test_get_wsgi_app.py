@@ -1,4 +1,5 @@
 import os
+import plaster
 import unittest
 
 # Testing Utilities
@@ -17,7 +18,7 @@ here = os.path.dirname(__file__)
 
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        self.loader = Loader('../sample_configs/basic_app.ini')
+        self.loader = plaster.get_loader('../sample_configs/basic_app.ini')
 
     def test_get_wsgi_app_with_relative(self):
         app = self.loader.get_wsgi_app(relative_to=here)
@@ -33,22 +34,23 @@ class TestSimpleURI(unittest.TestCase):
 
 class TestSectionedURI(TestSimpleURI):
     def setUp(self):
-        self.loader = Loader('../sample_configs/basic_app.ini#main')
+        self.loader = plaster.get_loader('../sample_configs/basic_app.ini#main')
 
 
 class TestSchemeAndSectionedURI(TestSimpleURI):
     def setUp(self):
-        self.loader = Loader('config:../sample_configs/basic_app.ini#main')
+        self.loader = plaster.get_loader(
+            'config:../sample_configs/basic_app.ini#main')
 
 
 class TestRelativeURI(unittest.TestCase):
     def setUp(self):
-        self.here = here
+        self.original_cwd = os.getcwd()
         os.chdir(os.path.join(here, '../sample_configs'))
-        self.loader = Loader('basic_app.ini')
+        self.loader = plaster.get_loader('basic_app.ini')
 
     def teadDown(self):
-        os.chdir(self.here)
+        os.chdir(self.original_cwd)
 
     def test_get_wsgi_app_no_args(self):
         app = self.loader.get_wsgi_app()
@@ -64,13 +66,13 @@ class TestRelativeURI(unittest.TestCase):
 
 class TestRelativeSectionedURI(TestRelativeURI):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(os.path.join(here, '../sample_configs'))
-
-        self.loader = Loader('basic_app.ini#main')
+        self.loader = plaster.get_loader('basic_app.ini#main')
 
 
 class TestRelativeSchemeAndSectionedURI(TestRelativeURI):
     def setUp(self):
+        self.original_cwd = os.getcwd()
         os.chdir(os.path.join(here, '../sample_configs'))
-
-        self.loader = Loader('config:basic_app.ini#main')
+        self.loader = plaster.get_loader('config:basic_app.ini#main')

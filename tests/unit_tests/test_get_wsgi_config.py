@@ -1,10 +1,7 @@
 import collections
+import mock
 import os
-
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import plaster
 import unittest
 
 # Testing Utilities
@@ -39,7 +36,8 @@ app_config_return_value.context = 'baz'
             return_value=app_config_return_value)
 class TestSimpleURI(unittest.TestCase):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader('/foo/bar/myapp.ini')
+        uri = plaster.parse_uri('/foo/bar/myapp.ini')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
     def test_explicit_name(self, appconfig):
         result = self.loader.get_wsgi_app_config('some_app')
@@ -70,7 +68,8 @@ class TestSimpleURI(unittest.TestCase):
             return_value=app_config_return_value)
 class TestHashedURI(unittest.TestCase):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader('/foo/bar/myapp.ini#my_app')
+        uri = plaster.parse_uri('/foo/bar/myapp.ini#my_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
     def test_hash_and_name_override(self, appconfig):
         values = {'a': 1}
@@ -100,15 +99,16 @@ class TestHashedURI(unittest.TestCase):
 
 class TestFullURI(TestHashedURI):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader(
-            'config:/foo/bar/myapp.ini#my_app')
+        uri = plaster.parse_uri('/foo/bar/myapp.ini#my_app')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
 
 @mock.patch('plaster_pastedeploy.appconfig', autospec=True,
             return_value=app_config_return_value)
 class TestRelativeFilePath(unittest.TestCase):
     def setUp(self):
-        self.loader = plaster_pastedeploy.Loader('foo/bar/myapp.ini')
+        uri = plaster.parse_uri('foo/bar/myapp.ini')
+        self.loader = plaster_pastedeploy.Loader(uri)
 
     def test_default_relative_to(self, appconfig):
         result = self.loader.get_wsgi_app_config()
