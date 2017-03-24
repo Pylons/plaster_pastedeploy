@@ -1,54 +1,41 @@
 from setuptools import setup, find_packages
-import os
 
-here = os.path.dirname(__file__)
-try:
-    with open(os.path.join(here, 'README.rst')) as f:
-        readme = f.read()
-    with open(os.path.join(here, 'CHANGES.txt')) as f:
-        changes = f.read()
-except IOError:
-    readme = changes = ''
+def readfile(name):
+    with open(name) as f:
+        return f.read()
 
+readme = readfile('README.rst')
+changes = readfile('CHANGES.rst')
 
 install_requires = [
     'PasteDeploy >= 1.5.0',  # py3 compat
     'plaster',
 ]
 
-docs_require = [
-    'Sphinx',
-    'pylons-sphinx-themes',
-]
-
 tests_require = [
-    'nose',
-    'nose-exclude',
-    'coverage',
-    'mock',
+    'pytest',
+    'pytest-cov',
 ]
 
 setup(
     name='plaster_pastedeploy',
     version='0.1.0',
     description=(
-        'A loader implementing the PasteDeploy loading syntax to be used '
-        'by plaster.'
+        'A loader implementing the PasteDeploy syntax to be used by plaster.'
     ),
     long_description=readme + '\n\n' + changes,
     author='Hunter Senft-Grupp',
     author_email='huntcsg@gmail.com',
     url='https://github.com/mmerickel/plaster_pastedeploy',
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages('src', exclude=['tests']),
+    package_dir={'': 'src'},
     include_package_data=True,
     install_requires=install_requires,
     extras_require={
-        'docs': docs_require,
         'testing': tests_require,
     },
-    test_suite='tests',
     zip_safe=False,
-    keywords='plaster pastedeploy plaster_pastedeploy ini config',
+    keywords='plaster pastedeploy plaster_pastedeploy ini config egg',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -59,14 +46,21 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
     ],
     entry_points={
-        'plaster.loader': [
+        'plaster.loader_factory': [
+            'ini=plaster_pastedeploy:Loader',
             'ini+pastedeploy=plaster_pastedeploy:Loader',
-            'config+pastedeploy=plaster_pastedeploy:Loader',
-            'call+pastedeploy=plaster_pastedeploy:Loader',
+            'egg=plaster_pastedeploy:Loader',
+            'egg+pastedeploy=plaster_pastedeploy:Loader',
+        ],
+        'plaster.wsgi_loader_factory': [
+            'ini=plaster_pastedeploy:Loader',
+            'ini+pastedeploy=plaster_pastedeploy:Loader',
+            'egg=plaster_pastedeploy:Loader',
             'egg+pastedeploy=plaster_pastedeploy:Loader',
         ],
     },

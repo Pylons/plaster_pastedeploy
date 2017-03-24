@@ -6,3 +6,4 @@ FakeApp.egg-info/entry_points.txt
 FakeApp.egg-info/top_level.txt
 fakeapp/__init__.py
 fakeapp/apps.py
+fakeapp/configapps.py
