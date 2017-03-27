@@ -1,0 +1,17 @@
+[run]
+parallel = true
+source =
+    plaster_pastedeploy
+    tests
+omit =
+    tests/fake_packages/*
+    tests/sample_configs/*
+
+[paths]
+source =
+    src/plaster
+    */site-packages/plaster_pastedeploy
+
+[report]
+show_missing = true
+precision = 2
