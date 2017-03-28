@@ -5,8 +5,8 @@ plaster_pastedeploy
 .. image:: https://img.shields.io/pypi/v/plaster_pastedeploy.svg
         :target: https://pypi.python.org/pypi/plaster_pastedeploy
 
-.. image:: https://img.shields.io/travis/mmerickel/plaster_pastedeploy.svg
-        :target: https://travis-ci.org/mmerickel/plaster_pastedeploy
+.. image:: https://img.shields.io/travis/Pylons/plaster_pastedeploy.svg
+        :target: https://travis-ci.org/Pylons/plaster_pastedeploy
 
 ``plaster_pastedeploy`` is a plaster_ plugin that provides a ``plaster.Loader``
 that can parse ini files according to the standard set by PasteDeploy_. It
@@ -68,4 +68,4 @@ Some examples are below:
 - ``egg:MyApp?debug=false#foo``
 
 .. _PasteDeploy: http://pastedeploy.readthedocs.io/en/latest/
-.. _plaster: http://plaster.readthedocs.io/en/latest/
+.. _plaster: http://docs.pylonsproject.org/projects/plaster/en/latest/

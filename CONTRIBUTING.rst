@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/mmerickel/plaster_pastedeploy/issues.
+Report bugs at https://github.com/Pylons/plaster_pastedeploy/issues.
 
 If you are reporting a bug, please include:
 
@@ -45,7 +45,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/mmerickel/plaster_pastedeploy/issues.
+The best way to send feedback is to file an issue at https://github.com/Pylons/plaster_pastedeploy/issues.
 
 If you are proposing a feature:
 
@@ -67,7 +67,7 @@ Ready to contribute? Here's how to set up `plaster_pastedeploy` for local develo
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
     $ python3 -m venv env
-    $ env/bin/pip install -e .[docs,testing]
+    $ env/bin/pip install -e .[testing]
 
 4. Create a branch for local development::
 
@@ -105,8 +105,9 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 2.7, 3.4 and 3.5, and for PyPy. Check
-   https://travis-ci.org/mmerickel/plaster_pastedeploy/pull_requests
+3. The pull request should work for Python 2.7, 3.4, 3.5, 3.6 and for PyPy.
+   Check
+   https://travis-ci.org/Pylons/plaster_pastedeploy/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
 Tips

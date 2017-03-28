@@ -26,7 +26,7 @@ setup(
     long_description=readme + '\n\n' + changes,
     author='Hunter Senft-Grupp',
     author_email='huntcsg@gmail.com',
-    url='https://github.com/mmerickel/plaster_pastedeploy',
+    url='https://github.com/Pylons/plaster_pastedeploy',
     packages=find_packages('src', exclude=['tests']),
     package_dir={'': 'src'},
     include_package_data=True,
