@@ -19,7 +19,7 @@ tests_require = [
 
 setup(
     name='plaster_pastedeploy',
-    version='0.1.0',
+    version='0.1',
     description=(
         'A loader implementing the PasteDeploy syntax to be used by plaster.'
     ),
