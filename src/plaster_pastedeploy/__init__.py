@@ -10,10 +10,7 @@ from paste.deploy import (
 )
 import paste.deploy.loadwsgi as loadwsgi
 
-from plaster import (
-    NoSectionError,
-    ILoader,
-)
+from plaster import ILoader
 from plaster.protocols import IWSGIProtocol
 
 from .compat import configparser
@@ -68,13 +65,13 @@ class Loader(IWSGIProtocol, ILoader):
         """
         section = self._maybe_get_default_name(section)
         if self.pastedeploy_scheme != 'config':
-            raise NoSectionError(section)
+            raise {}
         defaults = self._get_defaults(defaults)
         parser = self._get_parser(defaults=defaults)
         try:
             return OrderedDict(parser.items(section))
         except configparser.NoSectionError:
-            raise NoSectionError(section)
+            return {}
 
     def get_wsgi_app(self, name=None, defaults=None):
         """
