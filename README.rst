@@ -5,7 +5,7 @@ plaster_pastedeploy
 .. image:: https://img.shields.io/pypi/v/plaster_pastedeploy.svg
         :target: https://pypi.python.org/pypi/plaster_pastedeploy
 
-.. image:: https://img.shields.io/travis/Pylons/plaster_pastedeploy.svg
+.. image:: https://img.shields.io/travis/Pylons/plaster_pastedeploy/master.svg
         :target: https://travis-ci.org/Pylons/plaster_pastedeploy
 
 ``plaster_pastedeploy`` is a plaster_ plugin that provides a ``plaster.Loader``
