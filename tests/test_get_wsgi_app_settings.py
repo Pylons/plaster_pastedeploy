@@ -44,6 +44,10 @@ class TestFullURI(object):
         assert isinstance(conf, loadwsgi.AttrDict)
         assert isinstance(conf, ConfigDict)
 
+    def test_invalid_name(self):
+        with pytest.raises(LookupError):
+            self.loader.get_wsgi_app_settings('invalid')
+
 
 class TestSimpleURI(object):
     @pytest.fixture(autouse=True)
@@ -55,3 +59,19 @@ class TestSimpleURI(object):
     def test_get_wsgi_app_settings(self):
         conf = self.loader.get_wsgi_app_settings()
         assert conf['example'] == 'test'
+
+
+class TestEggURI(object):
+    config_uri = 'egg:FakeApp#configed'
+
+    @pytest.fixture(autouse=True)
+    def loader(self, fake_packages):
+        self.loader = plaster.get_loader(self.config_uri, protocols=['wsgi'])
+
+    def test_it(self):
+        conf = self.loader.get_wsgi_app_settings()
+        assert conf.global_conf['here'] == os.getcwd()
+
+    def test_invalid_name(self):
+        with pytest.raises(LookupError):
+            self.loader.get_wsgi_app_settings('invalid')

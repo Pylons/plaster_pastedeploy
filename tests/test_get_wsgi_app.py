@@ -29,6 +29,10 @@ class TestSimpleURI(object):
         same_app = self.loader.get_wsgi_app()
         assert same_app is fakeapp.apps.basic_app
 
+    def test_invalid_name(self):
+        with pytest.raises(LookupError):
+            self.loader.get_wsgi_app('invalid')
+
 
 class TestSectionedURI(TestSimpleURI):
     config_uri = basic_app_path + '#main'
@@ -51,8 +55,23 @@ class TestRelativeSchemeAndSectionedURI(TestSchemeAndSectionedURI,
     config_uri = 'ini+pastedeploy:' + basic_app_relpath + '#main'
 
 
-def test_egg_scheme(fake_packages):
-    import fakeapp.apps
-    loader = plaster.get_loader('egg:FakeApp', protocols=['wsgi'])
-    app = loader.get_wsgi_app('basic_app')
-    assert app is fakeapp.apps.basic_app
+class TestEggURI(object):
+    config_uri = 'egg:FakeApp#basic_app'
+
+    @pytest.fixture(autouse=True)
+    def loader(self, fake_packages):
+        self.loader = plaster.get_loader(self.config_uri, protocols=['wsgi'])
+
+    def test_it(self):
+        import fakeapp.apps
+        app = self.loader.get_wsgi_app()
+        assert app is fakeapp.apps.basic_app
+
+    def test_it_override_name(self):
+        import fakeapp.configapps
+        app = self.loader.get_wsgi_app('configed')
+        assert isinstance(app, fakeapp.configapps.SimpleApp)
+
+    def test_invalid_name(self):
+        with pytest.raises(LookupError):
+            self.loader.get_wsgi_app('invalid')

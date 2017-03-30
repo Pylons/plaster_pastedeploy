@@ -1,3 +1,9 @@
+unreleased
+==========
+
+- Fix a bug in 0.2 in which an exception was raised for an invalid section
+  if the a non-config-file-based protocol was used.
+
 0.2 (2017-03-29)
 ================
 

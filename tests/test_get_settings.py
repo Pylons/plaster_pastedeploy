@@ -15,6 +15,14 @@ class TestSimpleUri(object):
     def loader(self, fake_packages):
         self.loader = plaster.get_loader(self.config_uri)
 
+    def test_sections(self):
+        result = self.loader.get_sections()
+        assert set(result) == {'section1', 'section2'}
+
+    def test_missing_section(self):
+        result = self.loader.get_settings('missing', {'a': 'b'})
+        assert result == {}
+
     def test_no_defaults_passed(self):
         result = self.loader.get_settings('section1')
         assert result['a'] == 'default_a'
@@ -61,3 +69,23 @@ class TestSectionedURI(TestSimpleUri):
 
 class TestFullURI(TestSectionedURI):
     config_uri = 'ini+pastedeploy:' + test_settings_path + '#section1'
+
+
+class TestEggURI(object):
+    config_uri = 'egg:FakeApp#basic_app'
+
+    @pytest.fixture(autouse=True)
+    def loader(self, fake_packages):
+        self.loader = plaster.get_loader(self.config_uri)
+
+    def test_sections(self):
+        result = self.loader.get_sections()
+        assert result == []
+
+    def test_settings(self):
+        result = self.loader.get_settings()
+        assert result == {}
+
+    def test_named_settings(self):
+        result = self.loader.get_settings('missing')
+        assert result == {}

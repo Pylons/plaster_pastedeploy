@@ -39,3 +39,20 @@ class CapFilter(object):
             yield getattr(item, self.method_to_call)()
         if hasattr(app_iter, 'close'):
             app_iter.close()
+
+
+############################################################
+# Servers
+############################################################
+
+def make_fake_server(global_conf=None, **settings):
+    return Server(global_conf, settings)
+
+
+class Server(object):
+    def __init__(self, global_conf, settings):
+        self.global_conf = global_conf
+        self.settings = settings
+
+    def __call__(self, app):
+        return app

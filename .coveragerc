@@ -9,7 +9,7 @@ omit =
 
 [paths]
 source =
-    src/plaster
+    src/plaster_pastedeploy
     */site-packages/plaster_pastedeploy
 
 [report]

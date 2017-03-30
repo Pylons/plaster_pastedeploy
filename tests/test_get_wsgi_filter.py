@@ -15,7 +15,7 @@ class TestSimpleURI(object):
         monkeypatch.chdir(here)
         self.loader = plaster.get_loader(self.config_uri, protocols=['wsgi'])
 
-    def test_get_wsgi_app_main(self):
+    def test_get_wsgi_filter(self):
         import fakeapp.apps
         app_filter_factory = self.loader.get_wsgi_filter('filt')
 
@@ -28,6 +28,10 @@ class TestSimpleURI(object):
         assert app_filter.method_to_call == 'lower'
         assert app_filter.app is fakeapp.apps.basic_app
 
+    def test_invalid_name(self):
+        with pytest.raises(LookupError):
+            self.loader.get_wsgi_filter('invalid')
+
 
 class TestSectionedURI(TestSimpleURI):
     config_uri = test_filter_path + '#filt'
@@ -37,7 +41,8 @@ class TestSectionedURI(TestSimpleURI):
         app_filter_factory = self.loader.get_wsgi_filter()
 
         other_loader = plaster.get_loader(
-            'ini+pastedeploy:sample_configs/basic_app.ini#main')
+            'ini+pastedeploy:sample_configs/basic_app.ini#main',
+            protocols=['wsgi'])
         app = other_loader.get_wsgi_app()
         app_filter = app_filter_factory(app)
 
@@ -48,3 +53,27 @@ class TestSectionedURI(TestSimpleURI):
 
 class TestSchemeAndSectionedURI(TestSectionedURI):
     config_uri = 'ini+pastedeploy:' + test_filter_path + '#filt'
+
+
+class TestEggURI(object):
+    config_uri = 'egg:FakeApp#caps'
+
+    @pytest.fixture(autouse=True)
+    def loader(self, fake_packages):
+        self.loader = plaster.get_loader(self.config_uri, protocols=['wsgi'])
+
+    def test_it(self):
+        import fakeapp.apps
+        filter = self.loader.get_wsgi_filter()
+        filtered_app = filter('foo')
+        assert isinstance(filtered_app, fakeapp.apps.CapFilter)
+
+    def test_it_override_name(self):
+        import fakeapp.apps
+        filter = self.loader.get_wsgi_filter('caps')
+        filtered_app = filter('foo')
+        assert isinstance(filtered_app, fakeapp.apps.CapFilter)
+
+    def test_invalid_name(self):
+        with pytest.raises(LookupError):
+            self.loader.get_wsgi_filter('invalid')

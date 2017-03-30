@@ -65,7 +65,7 @@ class Loader(IWSGIProtocol, ILoader):
         """
         section = self._maybe_get_default_name(section)
         if self.pastedeploy_scheme != 'config':
-            raise {}
+            return {}
         defaults = self._get_defaults(defaults)
         parser = self._get_parser(defaults=defaults)
         try:
@@ -219,8 +219,8 @@ def get_pastedeploy_scheme(uri):
     scheme = 'config'
     if uri.scheme.startswith('egg'):
         scheme = 'egg'
-    elif uri.scheme.startswith('call'):
-        scheme = 'call'
+#    elif uri.scheme.startswith('call'):
+#        scheme = 'call'
     return scheme
 
 
