@@ -53,16 +53,18 @@ setup(
     ],
     entry_points={
         'plaster.loader_factory': [
-            'ini=plaster_pastedeploy:Loader',
-            'ini+pastedeploy=plaster_pastedeploy:Loader',
+            'file+ini=plaster_pastedeploy:Loader',
             'egg=plaster_pastedeploy:Loader',
-            'egg+pastedeploy=plaster_pastedeploy:Loader',
+            'pastedeploy=plaster_pastedeploy:Loader',
+            'pastedeploy+ini=plaster_pastedeploy:Loader',
+            'pastedeploy+egg=plaster_pastedeploy:Loader',
         ],
         'plaster.wsgi_loader_factory': [
-            'ini=plaster_pastedeploy:Loader',
-            'ini+pastedeploy=plaster_pastedeploy:Loader',
+            'file+ini=plaster_pastedeploy:Loader',
             'egg=plaster_pastedeploy:Loader',
-            'egg+pastedeploy=plaster_pastedeploy:Loader',
+            'pastedeploy=plaster_pastedeploy:Loader',
+            'pastedeploy+ini=plaster_pastedeploy:Loader',
+            'pastedeploy+egg=plaster_pastedeploy:Loader',
         ],
     },
 )
