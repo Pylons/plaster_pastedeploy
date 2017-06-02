@@ -9,7 +9,7 @@ changes = readfile('CHANGES.rst')
 
 install_requires = [
     'PasteDeploy >= 1.5.0',  # py3 compat
-    'plaster',
+    'plaster >= 0.5',  # file schemes
 ]
 
 tests_require = [
