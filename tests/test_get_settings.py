@@ -68,7 +68,7 @@ class TestSectionedURI(TestSimpleUri):
 
 
 class TestFullURI(TestSectionedURI):
-    config_uri = 'ini+pastedeploy:' + test_settings_path + '#section1'
+    config_uri = 'pastedeploy+ini:' + test_settings_path + '#section1'
 
 
 class TestEggURI(object):

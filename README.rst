@@ -61,9 +61,9 @@ Some examples are below:
 
 - ``development.ini?http_port=8080#main``
 
-- ``ini+pastedeploy:///path/to/development.ini``
+- ``pastedeploy+ini:///path/to/development.ini``
 
-- ``ini+pastedeploy://development.ini#foo``
+- ``pastedeploy+ini://development.ini#foo``
 
 - ``egg:MyApp?debug=false#foo``
 

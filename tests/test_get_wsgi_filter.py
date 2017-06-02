@@ -41,7 +41,7 @@ class TestSectionedURI(TestSimpleURI):
         app_filter_factory = self.loader.get_wsgi_filter()
 
         other_loader = plaster.get_loader(
-            'ini+pastedeploy:sample_configs/basic_app.ini#main',
+            'pastedeploy+ini:sample_configs/basic_app.ini#main',
             protocols=['wsgi'])
         app = other_loader.get_wsgi_app()
         app_filter = app_filter_factory(app)
@@ -52,7 +52,7 @@ class TestSectionedURI(TestSimpleURI):
 
 
 class TestSchemeAndSectionedURI(TestSectionedURI):
-    config_uri = 'ini+pastedeploy:' + test_filter_path + '#filt'
+    config_uri = 'pastedeploy+ini:' + test_filter_path + '#filt'
 
 
 class TestEggURI(object):

@@ -2,8 +2,8 @@ import plaster
 
 def test___repr__():
     from plaster_pastedeploy import Loader
-    uri = plaster.PlasterURL('ini+pastedeploy', 'development.ini')
+    uri = plaster.PlasterURL('pastedeploy+ini', 'development.ini')
     loader = Loader(uri)
     assert str(loader) == (
-        'plaster_pastedeploy.Loader(uri="ini+pastedeploy://development.ini")'
+        'plaster_pastedeploy.Loader(uri="pastedeploy+ini://development.ini")'
     )

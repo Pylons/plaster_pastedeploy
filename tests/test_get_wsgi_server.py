@@ -39,7 +39,7 @@ class TestSectionedURI(TestSimpleURI):
 
 
 class TestSchemeAndSectionedURI(TestSectionedURI):
-    config_uri = 'ini+pastedeploy:' + test_config_path + '#other'
+    config_uri = 'pastedeploy+ini:' + test_config_path + '#other'
 
 
 class TestEggURI(object):

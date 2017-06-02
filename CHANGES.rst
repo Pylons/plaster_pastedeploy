@@ -1,3 +1,10 @@
+unreleased
+==========
+
+- Drop the ``ini`` scheme and replace with ``file+ini`` and ``pastedeploy``.
+  Also rename ``ini+pastedeploy`` and ``egg+pastedeploy`` to
+  ``pastedeploy+ini`` and ``pastedeploy+egg`` respectively.
+
 0.2.1 (2017-03-29)
 ==================
 
