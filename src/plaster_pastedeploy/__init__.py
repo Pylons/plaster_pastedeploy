@@ -217,7 +217,7 @@ class Loader(IWSGIProtocol, ILoader):
 
 def get_pastedeploy_scheme(uri):
     scheme = 'config'
-    if uri.scheme.startswith('egg'):
+    if uri.scheme.endswith('egg'):
         scheme = 'egg'
 #    elif uri.scheme.startswith('call'):
 #        scheme = 'call'

@@ -1,3 +1,8 @@
+0.3.1 (2017-06-02)
+==================
+
+- Recognize the ``pastedeploy+egg`` scheme as an ``egg`` type.
+
 0.3 (2017-06-02)
 ================
 

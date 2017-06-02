@@ -72,7 +72,7 @@ class TestFullURI(TestSectionedURI):
 
 
 class TestEggURI(object):
-    config_uri = 'egg:FakeApp#basic_app'
+    config_uri = 'pastedeploy+egg:FakeApp#basic_app'
 
     @pytest.fixture(autouse=True)
     def loader(self, fake_packages):
