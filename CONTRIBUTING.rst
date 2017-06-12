@@ -77,24 +77,18 @@ Ready to contribute? Here's how to set up `plaster_pastedeploy` for local develo
 
 5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
-    $ env/bin/flake8 plaster_pastedeploy
-    $ python setup.py test or py.test
     $ tox
 
-   To get flake8 and tox, just pip install them into your virtualenv.
+6. Add your name to the ``CONTRIBUTORS.txt`` file in the root of the
+   repository.
 
-   If you need to make changes against the latest unreleased version of plaster, run tests using
-   $ tox -c tox-latest.ini
-
-   This will pip install plaster straight from the github repository. It is configured to do so from the master branch, but if need be, just change the branch specification.
-
-6. Commit your changes and push your branch to GitHub::
+7. Commit your changes and push your branch to GitHub::
 
     $ git add .
     $ git commit -m "Your detailed description of your changes."
     $ git push origin name-of-your-bugfix-or-feature
 
-7. Submit a pull request through the GitHub website.
+8. Submit a pull request through the GitHub website.
 
 Pull Request Guidelines
 -----------------------
