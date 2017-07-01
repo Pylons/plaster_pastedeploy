@@ -13,7 +13,15 @@ import paste.deploy.loadwsgi as loadwsgi
 from plaster import ILoader
 from plaster.protocols import IWSGIProtocol
 
-from .compat import configparser
+try:
+    # We need to import the **same** configparser module that PasteDeploy
+    # is using so that we can catch the NoSectionError raised by it.
+    #
+    # Import the py2 version first to avoid name clash with the configparser
+    # module on PyPI. See https://github.com/Pylons/plaster_pastedeploy/issues/5
+    from ConfigParser import NoSectionError
+except ImportError:
+    from configparser import NoSectionError
 
 
 class Loader(IWSGIProtocol, ILoader):
@@ -70,7 +78,7 @@ class Loader(IWSGIProtocol, ILoader):
         parser = self._get_parser(defaults=defaults)
         try:
             return OrderedDict(parser.items(section))
-        except configparser.NoSectionError:
+        except NoSectionError:
             return {}
 
     def get_wsgi_app(self, name=None, defaults=None):
