@@ -1,3 +1,10 @@
+0.3.2 (2017-07-01)
+==================
+
+- Resolve an issue in which ``NoSectionError`` would not be properly caught on
+  Python 2.7 if the ``configparser`` module was installed from PyPI.
+  See https://github.com/Pylons/plaster_pastedeploy/issues/5
+
 0.3.1 (2017-06-02)
 ==================
 
