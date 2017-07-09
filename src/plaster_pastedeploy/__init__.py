@@ -94,6 +94,8 @@ class Loader(IWSGIProtocol, ILoader):
             elif option.startswith('get '):
                 name = option[4:].strip()
                 get_from_globals[name] = value
+                # insert a value into local_conf to preserve the order
+                local_conf[name] = None
             else:
                 # annoyingly pastedeploy filters out all defaults unless
                 # "get foo" is used to pull it in

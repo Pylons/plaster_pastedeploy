@@ -25,10 +25,11 @@ class TestSimpleUri(object):
 
     def test_no_defaults_passed(self):
         result = self.loader.get_settings('section1')
-        assert result['a'] == 'a_val'
-        assert result['b'] == 'default_b'
-        assert result['c'] == 'override_b'
-        assert 'default_b' not in result
+        assert list(result.items()) == [
+            ('a', 'a_val'),
+            ('c', 'override_b'),
+            ('b', 'default_b'),
+        ]
 
         with pytest.raises(Exception):
             self.loader.get_settings('section2')
