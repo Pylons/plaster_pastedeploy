@@ -71,15 +71,38 @@ class Loader(IWSGIProtocol, ILoader):
             parsed by :class:`configparser.ConfigParser`.
 
         """
+        # This is a partial reimplementation of
+        # ``paste.deploy.loadwsgi.ConfigLoader:get_context`` which supports
+        # "set" and "get" options and filters out any other globals
         section = self._maybe_get_default_name(section)
         if self.pastedeploy_scheme != 'config':
             return {}
-        defaults = self._get_defaults(defaults)
-        parser = self._get_parser(defaults=defaults)
+        parser = self._get_parser(defaults)
+        defaults = parser.defaults()
+
         try:
-            return OrderedDict(parser.items(section))
+            raw_items = parser.items(section)
         except NoSectionError:
             return {}
+
+        local_conf = OrderedDict()
+        get_from_globals = {}
+        for option, value in raw_items:
+            if option.startswith('set '):
+                name = option[4:].strip()
+                defaults[name] = value
+            elif option.startswith('get '):
+                name = option[4:].strip()
+                get_from_globals[name] = value
+            else:
+                # annoyingly pastedeploy filters out all defaults unless
+                # "get foo" is used to pull it in
+                if option in defaults:
+                    continue
+                local_conf[option] = value
+        for option, global_option in get_from_globals.items():
+            local_conf[option] = defaults[global_option]
+        return local_conf
 
     def get_wsgi_app(self, name=None, defaults=None):
         """
@@ -203,6 +226,7 @@ class Loader(IWSGIProtocol, ILoader):
         return result
 
     def _get_parser(self, defaults=None):
+        defaults = self._get_defaults(defaults)
         parser = loadwsgi.NicerConfigParser(self.uri.path, defaults=defaults)
         parser.optionxform = str
         with open(parser.filename) as fp:
