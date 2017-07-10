@@ -39,17 +39,17 @@ exposes ``get_wsgi_app``, ``get_wsgi_app_settings``, ``get_wsgi_filter`` and
     settings = loader.get_settings('app:main')
 
     # to get settings for a WSGI app
-    app_config = loader.get_wsgi_app_settings() # defaults to main
+    app_config = loader.get_wsgi_app_settings()  # defaults to main
 
     # to get an actual WSGI app
-    app = loader.get_wsgi_app() # defaults to main
+    app = loader.get_wsgi_app()  # defaults to main
 
     # to get a filter and compose it with an app
     filter = loader.get_wsgi_filter('filt')
     app = filter(app)
 
     # to get a WSGI server
-    server = loader.get_wsgi_server() # defaults to main
+    server = loader.get_wsgi_server()  # defaults to main
 
     # to start the WSGI server
     server(app)
@@ -66,6 +66,28 @@ Some examples are below:
 - ``pastedeploy+ini://development.ini#foo``
 
 - ``egg:MyApp?debug=false#foo``
+
+Environment Variables
+---------------------
+
+This binding extends ``pastedeploy`` to inject environ variables as defaults
+which are available to use in the INI file. Each ``os.environ`` key is prefixed
+with ``ENV_`` and added as a default.
+
+For example:
+
+.. code-block:: ini
+
+   [app:main]
+   debug = %(ENV_APP_DEBUG)s
+
+The only thing to be aware of here is that there is no fallback. The INI file
+will fail to parse if the environment variable is not set. The app may be run
+like so:
+
+.. code-block:: bash
+
+   $ APP_DEBUG=true env/bin/pserve development.ini
 
 .. _PasteDeploy: http://pastedeploy.readthedocs.io/en/latest/
 .. _plaster: http://docs.pylonsproject.org/projects/plaster/en/latest/
