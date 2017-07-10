@@ -1,5 +1,5 @@
-unreleased
-==========
+0.4 (2017-07-09)
+================
 
 - Fix ``get_settings`` for an arbitrary section to follow the same rules as
   PasteDeploy with regards to the handling of defaults. The goal of this

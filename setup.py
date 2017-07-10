@@ -19,7 +19,7 @@ tests_require = [
 
 setup(
     name='plaster_pastedeploy',
-    version='0.3.2',
+    version='0.4',
     description=(
         'A loader implementing the PasteDeploy syntax to be used by plaster.'
     ),
@@ -38,7 +38,7 @@ setup(
     zip_safe=False,
     keywords='plaster pastedeploy plaster_pastedeploy ini config egg',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
