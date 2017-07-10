@@ -14,11 +14,12 @@ class TestFullURI(object):
         self.loader = plaster.get_loader(
             test_config_relpath, protocols=['wsgi'])
 
-    def test_get_wsgi_app_settings(self):
+    def test_get_wsgi_app_settings(self, monkeypatch):
         from collections import OrderedDict
         from paste.deploy import loadwsgi
         from plaster_pastedeploy import ConfigDict
 
+        monkeypatch.setattr('os.environ', {})
         conf = self.loader.get_wsgi_app_settings('test_get')
 
         assert conf == {

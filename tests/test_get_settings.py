@@ -17,7 +17,7 @@ class TestSimpleUri(object):
 
     def test_sections(self):
         result = self.loader.get_sections()
-        assert set(result) == {'section1', 'section2'}
+        assert set(result) == {'section1', 'section2', 'section3'}
 
     def test_missing_section(self):
         result = self.loader.get_settings('missing', {'a': 'b'})
@@ -46,6 +46,10 @@ class TestSimpleUri(object):
         assert result['b'] == 'b_val'
         assert result['c'] == 'default_c'
 
+    def test_environ_passed(self, monkeypatch):
+        monkeypatch.setenv('PLASTER_FOO', 'bar')
+        result = self.loader.get_settings('section3')
+        assert result['foo'] == 'bar'
 
 class TestSectionedURI(TestSimpleUri):
     config_uri = test_settings_path + '#section1'
