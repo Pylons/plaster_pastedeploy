@@ -15,6 +15,11 @@ unreleased
 
   See https://github.com/Pylons/plaster_pastedeploy/pull/6
 
+- Inject environment variables into the defaults automatically. These will
+  be available for interpolation as ``ENV_<foo>``. For example if environment
+  variable ``APP_DEBUG=true`` then ``%(ENV_APP_DEBUG)s`` will work within the
+  ini file. See https://github.com/Pylons/plaster_pastedeploy/pull/7
+
 0.3.2 (2017-07-01)
 ==================
 
