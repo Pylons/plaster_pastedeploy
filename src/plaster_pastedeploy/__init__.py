@@ -222,6 +222,7 @@ class Loader(IWSGIProtocol, ILoader):
             '__file__': path,
             'here': os.path.dirname(path),
         }
+        result.update({'ENV_' + k: v for k, v in os.environ.items()})
         result.update(self.uri.options)
         if defaults:
             result.update(defaults)
@@ -229,11 +230,9 @@ class Loader(IWSGIProtocol, ILoader):
 
     def _get_parser(self, defaults=None):
         defaults = self._get_defaults(defaults)
-        parser = loadwsgi.NicerConfigParser(self.uri.path, defaults=defaults)
-        parser.optionxform = str
-        with open(parser.filename) as fp:
-            parser.read_file(fp)
-        return parser
+        loader = loadwsgi.ConfigLoader(self.uri.path)
+        loader.update_defaults(defaults)
+        return loader.parser
 
     def _maybe_get_default_name(self, name):
         """Checks a name and determines whether to use the default name.
