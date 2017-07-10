@@ -25,30 +25,26 @@ class TestSimpleUri(object):
 
     def test_no_defaults_passed(self):
         result = self.loader.get_settings('section1')
-        assert result['a'] == 'default_a'
-        assert result['b'] == 'default_b'
-        assert result['c'] == 'default_a'
+        assert list(result.items()) == [
+            ('a', 'a_val'),
+            ('c', 'override_b'),
+            ('b', 'default_b'),
+        ]
 
-        result = self.loader.get_settings('section2')
-        assert result['a'] == 'default_a'
-        assert result['b'] == 'b_val'
-        with pytest.raises(KeyError):
-            result['c']
+        with pytest.raises(Exception):
+            self.loader.get_settings('section2')
 
     def test_defaults_passed(self):
-        result = self.loader.get_settings('section1',
-                                          defaults={'c': 'c_val', 'd': '%(b)s'})
-        assert result['a'] == 'default_a'
+        defaults = {'default_c': 'default_c'}
+        result = self.loader.get_settings('section1', defaults=defaults)
+        assert result['a'] == 'a_val'
         assert result['b'] == 'default_b'
-        assert result['c'] == 'default_a'
-        assert result['d'] == 'default_b'
+        assert 'default_c' not in result
 
-        result = self.loader.get_settings('section2',
-                                          defaults={'c': 'c_val', 'd': '%(b)s'})
-        assert result['a'] == 'default_a'
+        result = self.loader.get_settings('section2', defaults=defaults)
+        assert result['a'] == 'a_val'
         assert result['b'] == 'b_val'
-        assert result['c'] == 'c_val'
-        assert result['d'] == 'b_val'
+        assert result['c'] == 'default_c'
 
 
 class TestSectionedURI(TestSimpleUri):
@@ -56,15 +52,10 @@ class TestSectionedURI(TestSimpleUri):
 
     def test_no_section_name_passed(self):
         result = self.loader.get_settings()
-        assert result['a'] == 'default_a'
+        assert result['a'] == 'a_val'
         assert result['b'] == 'default_b'
-        assert result['c'] == 'default_a'
-
-        result = self.loader.get_settings(defaults={'c': 'c_val', 'd': '%(b)s'})
-        assert result['a'] == 'default_a'
-        assert result['b'] == 'default_b'
-        assert result['c'] == 'default_a'
-        assert result['d'] == 'default_b'
+        assert result['c'] == 'override_b'
+        assert 'default_b' not in result
 
 
 class TestFullURI(TestSectionedURI):

@@ -1,3 +1,20 @@
+unreleased
+==========
+
+- Fix ``get_settings`` for an arbitrary section to follow the same rules as
+  PasteDeploy with regards to the handling of defaults. The goal of this
+  package is to be compliant with PasteDeploy's format for all sections in
+  the file such that there are no surprising format changes in various
+  sections.
+
+  Supported added for ``set default_foo = bar`` and ``get foo = default_foo``
+  syntax to override a default value and to pull a default value into the
+  settings, respectively. In the above example the value ``foo = bar`` would
+  be returned. Any other defaults not pulled into the section via either
+  interpolation or the ``get`` syntax will be ignored.
+
+  See https://github.com/Pylons/plaster_pastedeploy/pull/6
+
 0.3.2 (2017-07-01)
 ==================
 
