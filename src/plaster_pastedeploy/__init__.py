@@ -49,7 +49,7 @@ class Loader(IWSGIProtocol, ILoader):
         """
         Find all of the sections in the config file.
 
-        :return: A list of the section names in the file.
+        :return: A list of the section names in the config file.
 
         """
         if self.pastedeploy_scheme != 'config':
@@ -67,8 +67,7 @@ class Loader(IWSGIProtocol, ILoader):
         :param defaults: a :class:`dict` that will get passed to
             :class:`configparser.ConfigParser` and will populate the
             ``DEFAULT`` section.
-        :return: A :class:`collections.OrderedDict` with key value pairs as
-            parsed by :class:`configparser.ConfigParser`.
+        :return: A :class:`plaster_pastedeploy.ConfigDict` of key/value pairs.
 
         """
         # This is a partial reimplementation of
@@ -104,7 +103,7 @@ class Loader(IWSGIProtocol, ILoader):
                 local_conf[option] = value
         for option, global_option in get_from_globals.items():
             local_conf[option] = defaults[global_option]
-        return local_conf
+        return ConfigDict(local_conf, defaults, self)
 
     def get_wsgi_app(self, name=None, defaults=None):
         """
@@ -186,7 +185,7 @@ class Loader(IWSGIProtocol, ILoader):
             inside :func:`paste.deploy.loadapp`.
         :param defaults: The ``global_conf`` that will be used during settings
             generation.
-        :return: :class:`plaster_pastedeploy.ConfigDict`.
+        :return: A :class:`plaster_pastedeploy.ConfigDict` of key/value pairs.
 
         """
         name = self._maybe_get_default_name(name)
@@ -196,8 +195,7 @@ class Loader(IWSGIProtocol, ILoader):
             name=name,
             relative_to=self.relative_to,
             global_conf=defaults)
-        conf = _ordered_dict_from_attr_dict(conf)
-        return conf
+        return ConfigDict(conf.local_conf, conf.global_conf, self)
 
     def setup_logging(self, defaults=None):
         """
@@ -258,35 +256,7 @@ def get_pastedeploy_scheme(uri):
 
 
 class ConfigDict(OrderedDict, loadwsgi.AttrDict):
-    """
-    A subclass to use so that the return values for getting settings can be
-    an instance of :class:`collections.OrderedDict` and
-    :class:`loadwsgi.AttrDict`.
-
-    This is so that any code writen against PasteDeploy will get an expected
-    return value.
-
-    """
-    pass
-
-
-def _ordered_dict_from_attr_dict(attr_dict):
-    """
-    Given an attr_dict turns it into a ConfigDict. This is an
-    :class:`collections.OrderedDict` with the following
-
-    additonal attributes:
-        - local_conf
-        - global_conf
-        - context
-
-    :param attr_dict: The :class:`paste.deploy.loadwsgi.AttrDict`.
-    :return: :class:`ConfigDict`.
-
-    """
-    conf_dict = ConfigDict(attr_dict)
-    conf_dict.local_conf = attr_dict.local_conf
-    conf_dict.global_conf = attr_dict.global_conf
-    conf_dict.context = attr_dict.context
-
-    return conf_dict
+    def __init__(self, local_conf, global_conf, loader):
+        super(ConfigDict, self).__init__(local_conf)
+        self.global_conf = global_conf
+        self.loader = loader

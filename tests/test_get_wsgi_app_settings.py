@@ -14,36 +14,12 @@ class TestFullURI(object):
         self.loader = plaster.get_loader(
             test_config_relpath, protocols=['wsgi'])
 
-    def test_get_wsgi_app_settings(self, monkeypatch):
-        from collections import OrderedDict
-        from paste.deploy import loadwsgi
-        from plaster_pastedeploy import ConfigDict
-
-        monkeypatch.setattr('os.environ', {})
-        conf = self.loader.get_wsgi_app_settings('test_get')
-
-        assert conf == {
-            'def1': 'a',
-            'def2': 'TEST',
-            'basepath': os.path.dirname(test_config_path),
-            'here': os.path.dirname(test_config_path),
-            '__file__': test_config_path,
-            'foo': 'TEST'}
-
-        assert conf.local_conf == {
-            'def1': 'a',
-            'foo': 'TEST'}
-        assert conf.global_conf == {
-            'def1': 'a',
-            'def2': 'TEST',
-            'basepath': os.path.dirname(test_config_path),
-            'here': os.path.dirname(test_config_path),
-            '__file__': test_config_path,
-        }
-
-        assert isinstance(conf, OrderedDict)
-        assert isinstance(conf, loadwsgi.AttrDict)
-        assert isinstance(conf, ConfigDict)
+    def test_get_wsgi_app_settings(self):
+        result = self.loader.get_wsgi_app_settings('test_get')
+        assert result == {'def1': 'a', 'foo': 'TEST'}
+        assert result.global_conf['def1'] == 'a'
+        assert result.global_conf['def2'] == 'TEST'
+        assert 'basepath' in result.global_conf
 
     def test_invalid_name(self):
         with pytest.raises(LookupError):
@@ -71,7 +47,7 @@ class TestEggURI(object):
 
     def test_it(self):
         conf = self.loader.get_wsgi_app_settings()
-        assert conf.global_conf['here'] == os.getcwd()
+        assert conf == {}
 
     def test_invalid_name(self):
         with pytest.raises(LookupError):
