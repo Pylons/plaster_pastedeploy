@@ -20,6 +20,12 @@ unreleased
   variable ``APP_DEBUG=true`` then ``%(ENV_APP_DEBUG)s`` will work within the
   ini file. See https://github.com/Pylons/plaster_pastedeploy/pull/7
 
+- ``get_settings`` and ``get_wsgi_app_settings`` both return only the local
+  config now. However, the returned object has a ``global_conf`` attribute
+  containing the defaults as well as a ``loader`` attribute pointing at
+  the loader instance.
+  See https://github.com/Pylons/plaster_pastedeploy/pull/8
+
 0.3.2 (2017-07-01)
 ==================
 

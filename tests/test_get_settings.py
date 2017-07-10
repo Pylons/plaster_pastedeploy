@@ -31,6 +31,10 @@ class TestSimpleUri(object):
             ('b', 'default_b'),
         ]
 
+        assert result.global_conf['default_a'] == 'default_a'
+        assert result.global_conf['default_b'] == 'override_b'
+        assert result.loader == self.loader
+
         with pytest.raises(Exception):
             self.loader.get_settings('section2')
 
@@ -41,15 +45,24 @@ class TestSimpleUri(object):
         assert result['b'] == 'default_b'
         assert 'default_c' not in result
 
+        assert result.global_conf['default_a'] == 'default_a'
+        assert result.global_conf['default_b'] == 'override_b'
+        assert result.global_conf['default_c'] == 'default_c'
+
         result = self.loader.get_settings('section2', defaults=defaults)
         assert result['a'] == 'a_val'
         assert result['b'] == 'b_val'
         assert result['c'] == 'default_c'
 
+        assert result.global_conf['default_a'] == 'default_a'
+        assert result.global_conf['default_b'] == 'default_b'
+        assert result.global_conf['default_c'] == 'default_c'
+
     def test_environ_passed(self, monkeypatch):
         monkeypatch.setenv('PLASTER_FOO', 'bar')
         result = self.loader.get_settings('section3')
         assert result['foo'] == 'bar'
+        assert result.global_conf['ENV_PLASTER_FOO'] == 'bar'
 
 class TestSectionedURI(TestSimpleUri):
     config_uri = test_settings_path + '#section1'
