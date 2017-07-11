@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from logging.config import fileConfig
 import os
+import sys
 
 from paste.deploy import (
     loadapp,
@@ -13,14 +14,16 @@ import paste.deploy.loadwsgi as loadwsgi
 from plaster import ILoader
 from plaster.protocols import IWSGIProtocol
 
-try:
+PY2 = sys.version_info[0] == 2
+
+if PY2:
     # We need to import the **same** configparser module that PasteDeploy
     # is using so that we can catch the NoSectionError raised by it.
     #
     # Import the py2 version first to avoid name clash with the configparser
     # module on PyPI. See https://github.com/Pylons/plaster_pastedeploy/issues/5
     from ConfigParser import NoSectionError
-except ImportError:
+else:
     from configparser import NoSectionError
 
 
@@ -220,7 +223,15 @@ class Loader(IWSGIProtocol, ILoader):
             '__file__': path,
             'here': os.path.dirname(path),
         }
-        result.update({'ENV_' + k: v for k, v in os.environ.items()})
+        if not PY2:
+            # Only inject environment variables on py3+ where escaping is
+            # supported. On py2 any environment var with contents of the
+            # format %(foo)s would break the parser. Unfortunately, this is
+            # risky enough to simply not support it.
+            result.update({
+                'ENV_' + k: v.replace('%', '%%')
+                for k, v in os.environ.items()
+            })
         result.update(self.uri.options)
         if defaults:
             result.update(defaults)
