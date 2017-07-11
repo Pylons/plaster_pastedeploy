@@ -10,8 +10,10 @@ test_config_path = os.path.abspath(os.path.join(here, test_config_relpath))
 
 class Test_setup_logging(object):
     @pytest.fixture(autouse=True)
-    def fileConfig(self, fake_packages, monkeypatch):
+    def logging(self, fake_packages, monkeypatch):
+        self.basicConfig = DummyFileConfig()
         self.fileConfig = DummyFileConfig()
+        monkeypatch.setattr('logging.basicConfig', self.basicConfig)
         monkeypatch.setattr('plaster_pastedeploy.fileConfig', self.fileConfig)
         monkeypatch.chdir(here)
 
@@ -23,6 +25,7 @@ class Test_setup_logging(object):
     def test_it_no_global_conf(self):
         loader = self._makeOne()
         loader.setup_logging()
+        assert self.fileConfig.called
 
         path, defaults = self.fileConfig.args
         assert path == test_config_relpath
@@ -32,6 +35,7 @@ class Test_setup_logging(object):
     def test_it_global_conf_empty(self):
         loader = self._makeOne()
         loader.setup_logging(defaults={})
+        assert self.fileConfig.called
 
         path, defaults = self.fileConfig.args
         assert path == test_config_relpath
@@ -42,6 +46,7 @@ class Test_setup_logging(object):
         defaults = {'key': 'val'}
         loader = self._makeOne()
         loader.setup_logging(defaults=defaults)
+        assert self.fileConfig.called
 
         path, defaults = self.fileConfig.args
         assert path == test_config_relpath
@@ -53,15 +58,24 @@ class Test_setup_logging(object):
         loader = self._makeOne()
         loader.get_sections = lambda *args: []
         loader.setup_logging()
+        assert self.basicConfig.called
+        assert self.basicConfig.args == ()
+        assert self.basicConfig.kwargs == {}
 
-        assert self.fileConfig.args is None
-        assert self.fileConfig.kwargs is None
+    def test_egg_uri(self):
+        loader = self._makeOne('egg:FakeApp#fake')
+        loader.setup_logging()
+        assert self.basicConfig.called
+        assert self.basicConfig.args == ()
+        assert self.basicConfig.kwargs == {}
 
 
 class DummyFileConfig(object):
+    called = False
     args = None
     kwargs = None
 
     def __call__(self, *args, **kwargs):
+        self.called = True
         self.args = args
         self.kwargs = kwargs

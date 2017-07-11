@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import logging
 from logging.config import fileConfig
 import os
 import sys
@@ -216,6 +217,9 @@ class Loader(IWSGIProtocol, ILoader):
         if 'loggers' in self.get_sections():
             defaults = self._get_defaults(defaults)
             fileConfig(self.uri.path, defaults)
+
+        else:
+            logging.basicConfig()
 
     def _get_defaults(self, defaults=None):
         path = os.path.abspath(self.uri.path)
