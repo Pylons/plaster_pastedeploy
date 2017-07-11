@@ -70,6 +70,8 @@ Some examples are below:
 Environment Variables
 ---------------------
 
+**This feature is not supported on Python 2.**
+
 This binding extends ``pastedeploy`` to inject environ variables as defaults
 which are available to use in the INI file. Each ``os.environ`` key is prefixed
 with ``ENV_`` and added as a default.
