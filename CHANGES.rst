@@ -1,3 +1,15 @@
+0.4.1 (2017-07-10)
+==================
+
+- Disable environment variable support on Python 2. PasteDeploy does not
+  support escaping the contents on Python 2 which means any variable with
+  a value of the format %(foo)s would break the parser. Because this is
+  implicit behavior it was deemed too error prone to support.
+  See https://github.com/Pylons/plaster_pastedeploy/pull/10
+
+- Escape environment variables such that their contents are not subject to
+  interpolation. See https://github.com/Pylons/plaster_pastedeploy/pull/10
+
 0.4 (2017-07-09)
 ================
 
