@@ -58,11 +58,17 @@ class TestSimpleUri(object):
         assert result.global_conf['default_b'] == 'default_b'
         assert result.global_conf['default_c'] == 'default_c'
 
-    def test_environ_passed(self, monkeypatch):
-        monkeypatch.setenv('PLASTER_FOO', 'bar')
+    @pytest.mark.skipif('sys.version_info[0] == 2')
+    def test_environ_passed_and_escaped(self, monkeypatch):
+        monkeypatch.setenv('PLASTER_FOO', '%(foo)s')
+        monkeypatch.setenv('PLASTER_BAR', '%bar')
         result = self.loader.get_settings('section3')
-        assert result['foo'] == 'bar'
-        assert result.global_conf['ENV_PLASTER_FOO'] == 'bar'
+
+        assert result['foo'] == '%(foo)s'
+        assert result.global_conf['ENV_PLASTER_FOO'] == '%(foo)s'
+
+        assert result['bar'] == '%bar'
+        assert result.global_conf['ENV_PLASTER_BAR'] == '%bar'
 
 class TestSectionedURI(TestSimpleUri):
     config_uri = test_settings_path + '#section1'
