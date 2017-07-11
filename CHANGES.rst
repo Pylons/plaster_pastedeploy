@@ -10,6 +10,10 @@
 - Escape environment variables such that their contents are not subject to
   interpolation. See https://github.com/Pylons/plaster_pastedeploy/pull/10
 
+- Invoke ``logging.basicConfig`` when ``setup_logging`` is called and the
+  config file doesn't contain any logging setup or the URI is using the
+  ``egg:`` protocol. See https://github.com/Pylons/plaster_pastedeploy/pull/11
+
 0.4 (2017-07-09)
 ================
 
