@@ -47,7 +47,8 @@ class Loader(IWSGIProtocol, ILoader):
             self.pastedeploy_scheme, uri.path)
         if os.path.isabs(uri.path):
             self.relative_to = os.path.dirname(uri.path)
-        self.relative_to = os.getcwd()
+        else:
+            self.relative_to = os.getcwd()
 
     def get_sections(self):
         """
