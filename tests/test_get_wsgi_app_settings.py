@@ -25,6 +25,16 @@ class TestFullURI(object):
         with pytest.raises(LookupError):
             self.loader.get_wsgi_app_settings('invalid')
 
+    def test_foreign_config(self):
+        result = self.loader.get_wsgi_app_settings('test_foreign_config')
+        assert result == {'another': 'FOO', 'bob': 'your uncle'}
+        assert result.global_conf['def1'] == 'a'
+        # NOTE this is actually different on pastedeploy tip but unreleased
+        assert result.global_conf['def2'] == 'from include'
+        assert result.global_conf['def3'] == 'c'
+        assert result.global_conf['glob'] == 'override'
+        assert 'basepath' in result.global_conf
+
 
 class TestSimpleURI(object):
     @pytest.fixture(autouse=True)
