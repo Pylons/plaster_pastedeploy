@@ -39,18 +39,15 @@ class Loader(IWSGIProtocol, ILoader):
     :ivar uri: A :class:`plaster.PlasterURL` instance.
 
     """
+    filepath = None
 
     def __init__(self, uri):
         self.uri = uri
         scheme = get_pastedeploy_scheme(uri)
         if scheme == 'config':
             self.filepath = os.path.abspath(uri.path)
-            self.pastedeploy_spec = 'config:{0}'.format(self.filepath)
-            self.relative_to = os.path.dirname(self.filepath)
-        else:
-            self.filepath = None
-            self.pastedeploy_spec = '{0}:{1}'.format(scheme, uri.path)
-            self.relative_to = os.getcwd()
+        self.pastedeploy_spec = '{0}:{1}'.format(scheme, uri.path)
+        self.relative_to = os.getcwd()
 
     def get_sections(self):
         """
@@ -225,10 +222,11 @@ class Loader(IWSGIProtocol, ILoader):
             logging.basicConfig()
 
     def _get_defaults(self, defaults=None):
-        result = {
-            '__file__': self.filepath,
-            'here': self.relative_to,
-        }
+        result = {'__file__': self.filepath}
+        if self.filepath is None:
+            result['here'] = os.getcwd()
+        else:
+            result['here'] = os.path.dirname(self.filepath)
         if not PY2:
             # Only inject environment variables on py3+ where escaping is
             # supported. On py2 any environment var with contents of the
