@@ -39,14 +39,14 @@ class Loader(IWSGIProtocol, ILoader):
     :ivar uri: A :class:`plaster.PlasterURL` instance.
 
     """
+    filepath = None
 
     def __init__(self, uri):
         self.uri = uri
-        self.pastedeploy_scheme = get_pastedeploy_scheme(uri)
-        self.pastedeploy_spec = '{0}:{1}'.format(
-            self.pastedeploy_scheme, uri.path)
-        if os.path.isabs(uri.path):
-            self.relative_to = os.path.dirname(uri.path)
+        scheme = get_pastedeploy_scheme(uri)
+        if scheme == 'config':
+            self.filepath = os.path.abspath(uri.path)
+        self.pastedeploy_spec = '{0}:{1}'.format(scheme, uri.path)
         self.relative_to = os.getcwd()
 
     def get_sections(self):
@@ -56,7 +56,7 @@ class Loader(IWSGIProtocol, ILoader):
         :return: A list of the section names in the config file.
 
         """
-        if self.pastedeploy_scheme != 'config':
+        if self.filepath is None:
             return []
         parser = self._get_parser()
         return parser.sections()
@@ -78,7 +78,7 @@ class Loader(IWSGIProtocol, ILoader):
         # ``paste.deploy.loadwsgi.ConfigLoader:get_context`` which supports
         # "set" and "get" options and filters out any other globals
         section = self._maybe_get_default_name(section)
-        if self.pastedeploy_scheme != 'config':
+        if self.filepath is None:
             return {}
         parser = self._get_parser(defaults)
         defaults = parser.defaults()
@@ -222,11 +222,11 @@ class Loader(IWSGIProtocol, ILoader):
             logging.basicConfig()
 
     def _get_defaults(self, defaults=None):
-        path = os.path.abspath(self.uri.path)
-        result = {
-            '__file__': path,
-            'here': os.path.dirname(path),
-        }
+        result = {'__file__': self.filepath}
+        if self.filepath is None:
+            result['here'] = os.getcwd()
+        else:
+            result['here'] = os.path.dirname(self.filepath)
         if not PY2:
             # Only inject environment variables on py3+ where escaping is
             # supported. On py2 any environment var with contents of the
