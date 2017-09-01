@@ -91,5 +91,5 @@ like so:
 
    $ APP_DEBUG=true env/bin/pserve development.ini
 
-.. _PasteDeploy: http://pastedeploy.readthedocs.io/en/latest/
-.. _plaster: http://docs.pylonsproject.org/projects/plaster/en/latest/
+.. _PasteDeploy: https://pastedeploy.readthedocs.io/en/latest/
+.. _plaster: https://docs.pylonsproject.org/projects/plaster/en/latest/
