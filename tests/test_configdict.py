@@ -12,17 +12,24 @@ def loader():
     return Loader(uri)
 
 
-@pytest.mark.parametrize('copy_method', [
-    "configdict.copy()",
-    "copy.copy(configdict)",
-    ])
-def test_copy(copy_method, loader):
+def dict_copy(d):
+    return d.copy()
+
+
+def copy_copy(d):
+    return copy.copy(d)
+
+
+@pytest.mark.parametrize('copier',
+                         [dict_copy, copy_copy],
+                         ids=lambda f: f.__name__)
+def test_copy(copier, loader):
     from plaster_pastedeploy import ConfigDict
     x = []
     global_conf = {}
     configdict = ConfigDict({'x': x}, global_conf, loader)
 
-    duplicate = eval(copy_method)
+    duplicate = copier(configdict)
 
     assert duplicate.items() == configdict.items()
     # check that we got a shallow copy
