@@ -275,3 +275,11 @@ class ConfigDict(OrderedDict, loadwsgi.AttrDict):
         super(ConfigDict, self).__init__(local_conf)
         self.global_conf = global_conf
         self.loader = loader
+
+    def __reduce__(self):
+        initargs = list(self.items()), self.global_conf, self.loader
+        return self.__class__, initargs
+
+    def copy(self):
+        callable, args = self.__reduce__()
+        return callable(*args)
