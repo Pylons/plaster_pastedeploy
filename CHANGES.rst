@@ -1,7 +1,8 @@
-Next Release
-============
+0.4.2 (2017-11-20)
+==================
 
 - Fix ``ConfigDict.copy`` so that it works.
+  See https://github.com/Pylons/plaster_pastedeploy/pull/14
 
 0.4.1 (2017-07-10)
 ==================
