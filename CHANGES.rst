@@ -1,3 +1,8 @@
+Next Release
+============
+
+- Fix ``ConfigDict.copy`` so that it works.
+
 0.4.1 (2017-07-10)
 ==================
 

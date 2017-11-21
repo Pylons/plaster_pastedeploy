@@ -108,3 +108,4 @@ Contributors
 
 - Michael Merickel (2016-06-12)
 - Steve Piercy (2017-08-31)
+- Geoffrey T. Dairiki (2017-11-16)
