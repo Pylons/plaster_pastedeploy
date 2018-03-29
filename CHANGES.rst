@@ -1,5 +1,5 @@
-unreleased
-==========
+0.5 (2018-03-29)
+================
 
 - Removed environment variable support entirely for now. The feature requires
   bugfixes upstream in PasteDeploy which have not been done yet and this was
