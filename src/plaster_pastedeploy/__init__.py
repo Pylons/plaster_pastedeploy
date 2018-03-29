@@ -227,15 +227,6 @@ class Loader(IWSGIProtocol, ILoader):
             result['here'] = os.getcwd()
         else:
             result['here'] = os.path.dirname(self.filepath)
-        if not PY2:
-            # Only inject environment variables on py3+ where escaping is
-            # supported. On py2 any environment var with contents of the
-            # format %(foo)s would break the parser. Unfortunately, this is
-            # risky enough to simply not support it.
-            result.update({
-                'ENV_' + k: v.replace('%', '%%')
-                for k, v in os.environ.items()
-            })
         result.update(self.uri.options)
         if defaults:
             result.update(defaults)

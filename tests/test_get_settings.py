@@ -17,7 +17,7 @@ class TestSimpleUri(object):
 
     def test_sections(self):
         result = self.loader.get_sections()
-        assert set(result) == {'section1', 'section2', 'section3'}
+        assert set(result) == {'section1', 'section2'}
 
     def test_missing_section(self):
         result = self.loader.get_settings('missing', {'a': 'b'})
@@ -57,18 +57,6 @@ class TestSimpleUri(object):
         assert result.global_conf['default_a'] == 'default_a'
         assert result.global_conf['default_b'] == 'default_b'
         assert result.global_conf['default_c'] == 'default_c'
-
-    @pytest.mark.skipif('sys.version_info[0] == 2')
-    def test_environ_passed_and_escaped(self, monkeypatch):
-        monkeypatch.setenv('PLASTER_FOO', '%(foo)s')
-        monkeypatch.setenv('PLASTER_BAR', '%bar')
-        result = self.loader.get_settings('section3')
-
-        assert result['foo'] == '%(foo)s'
-        assert result.global_conf['ENV_PLASTER_FOO'] == '%(foo)s'
-
-        assert result['bar'] == '%bar'
-        assert result.global_conf['ENV_PLASTER_BAR'] == '%bar'
 
 class TestSectionedURI(TestSimpleUri):
     config_uri = test_settings_path + '#section1'

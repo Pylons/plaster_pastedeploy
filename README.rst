@@ -67,29 +67,5 @@ Some examples are below:
 
 - ``egg:MyApp?debug=false#foo``
 
-Environment Variables
----------------------
-
-**This feature is not supported on Python 2.**
-
-This binding extends ``pastedeploy`` to inject environ variables as defaults
-which are available to use in the INI file. Each ``os.environ`` key is prefixed
-with ``ENV_`` and added as a default.
-
-For example:
-
-.. code-block:: ini
-
-   [app:main]
-   debug = %(ENV_APP_DEBUG)s
-
-The only thing to be aware of here is that there is no fallback. The INI file
-will fail to parse if the environment variable is not set. The app may be run
-like so:
-
-.. code-block:: bash
-
-   $ APP_DEBUG=true env/bin/pserve development.ini
-
 .. _PasteDeploy: https://pastedeploy.readthedocs.io/en/latest/
 .. _plaster: https://docs.pylonsproject.org/projects/plaster/en/latest/

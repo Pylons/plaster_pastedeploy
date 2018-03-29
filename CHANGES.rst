@@ -1,3 +1,11 @@
+unreleased
+==========
+
+- Removed environment variable support entirely for now. The feature requires
+  bugfixes upstream in PasteDeploy which have not been done yet and this was
+  breaking people's environments so it is gone for now.
+  See https://github.com/Pylons/plaster_pastedeploy/pull/15
+
 0.4.2 (2017-11-20)
 ==================
 
