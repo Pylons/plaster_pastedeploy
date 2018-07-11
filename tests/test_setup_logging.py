@@ -69,6 +69,12 @@ class Test_setup_logging(object):
         assert self.basicConfig.args == ()
         assert self.basicConfig.kwargs == {}
 
+    def test_it_keeps_existing_loggers(self):
+        loader = self._makeOne()
+        loader.setup_logging()
+        assert self.fileConfig.called
+        assert self.fileConfig.kwargs['disable_existing_loggers'] is False
+
 
 class DummyFileConfig(object):
     called = False

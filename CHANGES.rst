@@ -1,3 +1,11 @@
+unreleased
+==========
+
+- Change ``setup_logging`` to invoke ``logging.config.fileConfig`` with
+  ``disable_existing_loggers=False`` to avoid disabling any loggers that were
+  imported prior to configuration of the logging system.
+  See https://github.com/Pylons/plaster_pastedeploy/pull/16
+
 0.5 (2018-03-29)
 ================
 
