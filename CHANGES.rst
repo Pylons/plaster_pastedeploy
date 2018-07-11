@@ -1,5 +1,5 @@
-unreleased
-==========
+0.6 (2018-07-11)
+================
 
 - Change ``setup_logging`` to invoke ``logging.config.fileConfig`` with
   ``disable_existing_loggers=False`` to avoid disabling any loggers that were
