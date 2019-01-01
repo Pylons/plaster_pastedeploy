@@ -29,8 +29,7 @@ class TestFullURI(object):
         result = self.loader.get_wsgi_app_settings('test_foreign_config')
         assert result == {'another': 'FOO', 'bob': 'your uncle'}
         assert result.global_conf['def1'] == 'a'
-        # NOTE this is actually different on pastedeploy tip but unreleased
-        assert result.global_conf['def2'] == 'from include'
+        assert result.global_conf['def2'] == 'b'
         assert result.global_conf['def3'] == 'c'
         assert result.global_conf['glob'] == 'override'
         assert 'basepath' in result.global_conf
