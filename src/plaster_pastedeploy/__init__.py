@@ -17,7 +17,8 @@ if PY2:
     # is using so that we can catch the NoSectionError raised by it.
     #
     # Import the py2 version first to avoid name clash with the configparser
-    # module on PyPI. See https://github.com/Pylons/plaster_pastedeploy/issues/5
+    # module on PyPI.
+    # See https://github.com/Pylons/plaster_pastedeploy/issues/5
     from ConfigParser import NoSectionError
 else:
     from configparser import NoSectionError
