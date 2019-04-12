@@ -4,12 +4,7 @@ from logging.config import fileConfig
 import os
 import sys
 
-from paste.deploy import (
-    loadapp,
-    loadserver,
-    loadfilter,
-    appconfig,
-)
+from paste.deploy import loadapp, loadserver, loadfilter, appconfig
 import paste.deploy.loadwsgi as loadwsgi
 
 from plaster import ILoader
@@ -39,14 +34,15 @@ class Loader(IWSGIProtocol, ILoader):
     :ivar uri: A :class:`plaster.PlasterURL` instance.
 
     """
+
     filepath = None
 
     def __init__(self, uri):
         self.uri = uri
         scheme = get_pastedeploy_scheme(uri)
-        if scheme == 'config':
+        if scheme == "config":
             self.filepath = os.path.abspath(uri.path)
-        self.pastedeploy_spec = '{0}:{1}'.format(scheme, uri.path)
+        self.pastedeploy_spec = "{0}:{1}".format(scheme, uri.path)
         self.relative_to = os.getcwd()
 
     def get_sections(self):
@@ -91,10 +87,10 @@ class Loader(IWSGIProtocol, ILoader):
         local_conf = OrderedDict()
         get_from_globals = {}
         for option, value in raw_items:
-            if option.startswith('set '):
+            if option.startswith("set "):
                 name = option[4:].strip()
                 defaults[name] = value
-            elif option.startswith('get '):
+            elif option.startswith("get "):
                 name = option[4:].strip()
                 get_from_globals[name] = value
                 # insert a value into local_conf to preserve the order
@@ -125,10 +121,12 @@ class Loader(IWSGIProtocol, ILoader):
         """
         name = self._maybe_get_default_name(name)
         defaults = self._get_defaults(defaults)
-        return loadapp(self.pastedeploy_spec,
-                       name=name,
-                       relative_to=self.relative_to,
-                       global_conf=defaults)
+        return loadapp(
+            self.pastedeploy_spec,
+            name=name,
+            relative_to=self.relative_to,
+            global_conf=defaults,
+        )
 
     def get_wsgi_server(self, name=None, defaults=None):
         """
@@ -146,10 +144,12 @@ class Loader(IWSGIProtocol, ILoader):
         """
         name = self._maybe_get_default_name(name)
         defaults = self._get_defaults(defaults)
-        return loadserver(self.pastedeploy_spec,
-                          name=name,
-                          relative_to=self.relative_to,
-                          global_conf=defaults)
+        return loadserver(
+            self.pastedeploy_spec,
+            name=name,
+            relative_to=self.relative_to,
+            global_conf=defaults,
+        )
 
     def get_wsgi_filter(self, name=None, defaults=None):
         """Reads the configuration soruce and finds and loads a WSGI filter
@@ -165,10 +165,12 @@ class Loader(IWSGIProtocol, ILoader):
         """
         name = self._maybe_get_default_name(name)
         defaults = self._get_defaults(defaults)
-        return loadfilter(self.pastedeploy_spec,
-                          name=name,
-                          relative_to=self.relative_to,
-                          global_conf=defaults)
+        return loadfilter(
+            self.pastedeploy_spec,
+            name=name,
+            relative_to=self.relative_to,
+            global_conf=defaults,
+        )
 
     def get_wsgi_app_settings(self, name=None, defaults=None):
         """
@@ -198,7 +200,8 @@ class Loader(IWSGIProtocol, ILoader):
             self.pastedeploy_spec,
             name=name,
             relative_to=self.relative_to,
-            global_conf=defaults)
+            global_conf=defaults,
+        )
         return ConfigDict(conf.local_conf, conf.global_conf, self)
 
     def setup_logging(self, defaults=None):
@@ -214,7 +217,7 @@ class Loader(IWSGIProtocol, ILoader):
         :return: ``None``.
 
         """
-        if 'loggers' in self.get_sections():
+        if "loggers" in self.get_sections():
             defaults = self._get_defaults(defaults)
             fileConfig(self.uri.path, defaults, disable_existing_loggers=False)
 
@@ -222,11 +225,11 @@ class Loader(IWSGIProtocol, ILoader):
             logging.basicConfig()
 
     def _get_defaults(self, defaults=None):
-        result = {'__file__': self.filepath}
+        result = {"__file__": self.filepath}
         if self.filepath is None:
-            result['here'] = os.getcwd()
+            result["here"] = os.getcwd()
         else:
-            result['here'] = os.path.dirname(self.filepath)
+            result["here"] = os.path.dirname(self.filepath)
         result.update(self.uri.options)
         if defaults:
             result.update(defaults)
@@ -253,11 +256,11 @@ class Loader(IWSGIProtocol, ILoader):
 
 
 def get_pastedeploy_scheme(uri):
-    scheme = 'config'
-    if uri.scheme.endswith('egg'):
-        scheme = 'egg'
-#    elif uri.scheme.startswith('call'):
-#        scheme = 'call'
+    scheme = "config"
+    if uri.scheme.endswith("egg"):
+        scheme = "egg"
+    #    elif uri.scheme.startswith('call'):
+    #        scheme = 'call'
     return scheme
 
 

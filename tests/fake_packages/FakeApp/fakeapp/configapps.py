@@ -5,10 +5,10 @@ class SimpleApp(object):
         self.name = name
 
     def __call__(self, environ, start_response):
-        start_response('200 OK', [('Content-type', 'text/html')])
-        return ['I am: ', name]
-        
-    def make_app(cls, global_conf, **conf):
-        return cls(global_conf, conf, 'basic')
-    make_app = classmethod(make_app)
+        start_response("200 OK", [("Content-type", "text/html")])
+        return ["I am: ", name]
 
+    def make_app(cls, global_conf, **conf):
+        return cls(global_conf, conf, "basic")
+
+    make_app = classmethod(make_app)

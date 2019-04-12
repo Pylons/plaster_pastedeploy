@@ -4,7 +4,7 @@ import pytest
 
 here = os.path.dirname(__file__)
 
-test_config_relpath = 'sample_configs/test_config.ini'
+test_config_relpath = "sample_configs/test_config.ini"
 test_config_path = os.path.abspath(os.path.join(here, test_config_relpath))
 
 
@@ -13,8 +13,8 @@ class Test_setup_logging(object):
     def logging(self, fake_packages, monkeypatch):
         self.basicConfig = DummyFileConfig()
         self.fileConfig = DummyFileConfig()
-        monkeypatch.setattr('logging.basicConfig', self.basicConfig)
-        monkeypatch.setattr('plaster_pastedeploy.fileConfig', self.fileConfig)
+        monkeypatch.setattr("logging.basicConfig", self.basicConfig)
+        monkeypatch.setattr("plaster_pastedeploy.fileConfig", self.fileConfig)
         monkeypatch.chdir(here)
 
     def _makeOne(self, uri=None):
@@ -29,8 +29,8 @@ class Test_setup_logging(object):
 
         path, defaults = self.fileConfig.args
         assert path == test_config_relpath
-        assert defaults['__file__'] == test_config_path
-        assert defaults['here'] == os.path.dirname(test_config_path)
+        assert defaults["__file__"] == test_config_path
+        assert defaults["here"] == os.path.dirname(test_config_path)
 
     def test_it_global_conf_empty(self):
         loader = self._makeOne()
@@ -39,20 +39,20 @@ class Test_setup_logging(object):
 
         path, defaults = self.fileConfig.args
         assert path == test_config_relpath
-        assert defaults['__file__'] == test_config_path
-        assert defaults['here'] == os.path.dirname(test_config_path)
+        assert defaults["__file__"] == test_config_path
+        assert defaults["here"] == os.path.dirname(test_config_path)
 
     def test_it_global_conf_not_empty(self):
-        defaults = {'key': 'val'}
+        defaults = {"key": "val"}
         loader = self._makeOne()
         loader.setup_logging(defaults=defaults)
         assert self.fileConfig.called
 
         path, defaults = self.fileConfig.args
         assert path == test_config_relpath
-        assert defaults['__file__'] == test_config_path
-        assert defaults['here'] == os.path.dirname(test_config_path)
-        assert defaults['key'] == 'val'
+        assert defaults["__file__"] == test_config_path
+        assert defaults["here"] == os.path.dirname(test_config_path)
+        assert defaults["key"] == "val"
 
     def test_no_logging_section(self):
         loader = self._makeOne()
@@ -63,7 +63,7 @@ class Test_setup_logging(object):
         assert self.basicConfig.kwargs == {}
 
     def test_egg_uri(self):
-        loader = self._makeOne('egg:FakeApp#fake')
+        loader = self._makeOne("egg:FakeApp#fake")
         loader.setup_logging()
         assert self.basicConfig.called
         assert self.basicConfig.args == ()
@@ -73,7 +73,7 @@ class Test_setup_logging(object):
         loader = self._makeOne()
         loader.setup_logging()
         assert self.fileConfig.called
-        assert self.fileConfig.kwargs['disable_existing_loggers'] is False
+        assert self.fileConfig.kwargs["disable_existing_loggers"] is False
 
 
 class DummyFileConfig(object):
