@@ -8,7 +8,7 @@ readme = readfile('README.rst')
 changes = readfile('CHANGES.rst')
 
 install_requires = [
-    'PasteDeploy >= 1.5.0',  # py3 compat
+    'PasteDeploy >= 2.0',  # default override order has been changed in version 2
     'plaster >= 0.5',  # file schemes
 ]
 
