@@ -1,3 +1,11 @@
+unreleased
+==========
+
+- Depend on ``pastedeploy >= 2.0`` to enforce new behavior when overriding
+  defaults. Default values passed into the loader will now override values in
+  the ``[DEFAULT]`` section.
+  See https://github.com/Pylons/plaster_pastedeploy/pull/17
+
 0.6 (2018-07-11)
 ================
 
