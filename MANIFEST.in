@@ -9,6 +9,6 @@ include CONTRIBUTORS.txt
 
 include pyproject.toml
 include .coveragerc .flake8 pytest.ini
-include tox.ini appveyor.yml .travis.yml rtd.txt
+include tox.ini appveyor.yml .travis.yml
 
 recursive-exclude * __pycache__ *.py[cod]
