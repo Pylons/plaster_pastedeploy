@@ -18,7 +18,7 @@ tests_require = ["pytest", "pytest-cov"]
 
 setup(
     name="plaster_pastedeploy",
-    version="0.6",
+    version="0.7",
     description=(
         "A loader implementing the PasteDeploy syntax to be used by plaster."
     ),

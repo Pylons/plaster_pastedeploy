@@ -1,5 +1,5 @@
-unreleased
-==========
+0.7 (2019-04-12)
+================
 
 - Depend on ``pastedeploy >= 2.0`` to enforce new behavior when overriding
   defaults. Default values passed into the loader will now override values in
