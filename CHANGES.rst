@@ -1,3 +1,12 @@
+unreleased
+==========
+
+- Drop support for Python 2.7, 3.4, 3.5, 3.6.
+
+- Add support for Python 3.8, 3.9, 3.10.
+
+- Blackify the codebase.
+
 0.7 (2019-04-12)
 ================
 
