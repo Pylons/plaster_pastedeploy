@@ -5,8 +5,8 @@ plaster_pastedeploy
 .. image:: https://img.shields.io/pypi/v/plaster_pastedeploy.svg
         :target: https://pypi.python.org/pypi/plaster_pastedeploy
 
-.. image:: https://github.com/Pylons/Pyramid/workflows/Build%20and%20test/badge.svg?branch=master
-        :target: https://github.com/Pylons/Pyramid/actions?query=workflow%3A%22Build+and+test%22
+.. image:: https://github.com/Pylons/plaster_pastedeploy/workflows/Build%20and%20test/badge.svg?branch=master
+        :target: https://github.com/Pylons/plaster_pastedeploy/actions?query=workflow%3A%22Build+and+test%22
         :alt: master CI Status
 
 ``plaster_pastedeploy`` is a plaster_ plugin that provides a ``plaster.Loader``
