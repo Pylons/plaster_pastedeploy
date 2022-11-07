@@ -7,6 +7,8 @@ unreleased
 
 - Blackify the codebase.
 
+- Switch CI to Github Actions.
+
 0.7 (2019-04-12)
 ================
 
