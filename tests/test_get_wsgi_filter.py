@@ -1,4 +1,5 @@
 import os
+
 import plaster
 import pytest
 
@@ -7,7 +8,7 @@ here = os.path.dirname(__file__)
 test_filter_path = "sample_configs/test_filter.ini"
 
 
-class TestSimpleURI(object):
+class TestSimpleURI:
     config_uri = test_filter_path
 
     @pytest.fixture(autouse=True)
@@ -59,7 +60,7 @@ class TestSchemeAndSectionedURI(TestSectionedURI):
     config_uri = "pastedeploy+ini:" + test_filter_path + "#filt"
 
 
-class TestEggURI(object):
+class TestEggURI:
     config_uri = "egg:FakeApp#caps"
 
     @pytest.fixture(autouse=True)

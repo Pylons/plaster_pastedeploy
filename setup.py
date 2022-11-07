@@ -19,10 +19,9 @@ tests_require = ["pytest", "pytest-cov"]
 setup(
     name="plaster_pastedeploy",
     version="0.7",
-    description=(
-        "A loader implementing the PasteDeploy syntax to be used by plaster."
-    ),
+    description=("A loader implementing the PasteDeploy syntax to be used by plaster."),
     long_description=readme + "\n\n" + changes,
+    long_description_content_type="text/x-rst",
     author="Hunter Senft-Grupp",
     author_email="pylons-discuss@googlegroups.com",
     url="https://github.com/Pylons/plaster_pastedeploy",

@@ -1,6 +1,7 @@
 """ Tests for plaster_pastedeploy.ConfigDict
 """
 import copy  # noqa: F401
+
 import plaster
 import pytest
 
@@ -21,9 +22,7 @@ def copy_copy(d):
     return copy.copy(d)
 
 
-@pytest.mark.parametrize(
-    "copier", [dict_copy, copy_copy], ids=lambda f: f.__name__
-)
+@pytest.mark.parametrize("copier", [dict_copy, copy_copy], ids=lambda f: f.__name__)
 def test_copy(copier, loader):
     from plaster_pastedeploy import ConfigDict
 

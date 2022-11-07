@@ -1,4 +1,5 @@
 import os
+
 import plaster
 import pytest
 
@@ -8,7 +9,7 @@ test_config_relpath = "sample_configs/test_config.ini"
 test_config_path = os.path.abspath(os.path.join(here, test_config_relpath))
 
 
-class Test_setup_logging(object):
+class Test_setup_logging:
     @pytest.fixture(autouse=True)
     def logging(self, fake_packages, monkeypatch):
         self.basicConfig = DummyFileConfig()
@@ -76,7 +77,7 @@ class Test_setup_logging(object):
         assert self.fileConfig.kwargs["disable_existing_loggers"] is False
 
 
-class DummyFileConfig(object):
+class DummyFileConfig:
     called = False
     args = None
     kwargs = None

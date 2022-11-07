@@ -1,4 +1,5 @@
 import os
+
 import plaster
 import pytest
 
@@ -8,7 +9,7 @@ basic_app_relpath = "sample_configs/basic_app.ini"
 basic_app_path = os.path.abspath(os.path.join(here, basic_app_relpath))
 
 
-class TestSimpleURI(object):
+class TestSimpleURI:
     config_uri = basic_app_path
 
     @pytest.fixture(autouse=True)
@@ -52,13 +53,11 @@ class TestRelativeSectionedURI(TestSectionedURI, TestRelativeURI):
     config_uri = basic_app_relpath + "#main"
 
 
-class TestRelativeSchemeAndSectionedURI(
-    TestSchemeAndSectionedURI, TestRelativeURI
-):
+class TestRelativeSchemeAndSectionedURI(TestSchemeAndSectionedURI, TestRelativeURI):
     config_uri = "pastedeploy+ini:" + basic_app_relpath + "#main"
 
 
-class TestEggURI(object):
+class TestEggURI:
     config_uri = "egg:FakeApp#basic_app"
 
     @pytest.fixture(autouse=True)

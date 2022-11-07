@@ -1,7 +1,8 @@
 import os.path
+import sys
+
 import pkg_resources
 import pytest
-import sys
 
 
 @pytest.fixture(scope="session")

@@ -28,7 +28,7 @@ def make_cap_filter(global_conf, method_to_call="upper"):
     return cap_filter
 
 
-class CapFilter(object):
+class CapFilter:
     def __init__(self, app, global_conf, method_to_call="upper"):
         self.app = app
         self.method_to_call = method_to_call
@@ -51,7 +51,7 @@ def make_fake_server(global_conf=None, **settings):
     return Server(global_conf, settings)
 
 
-class Server(object):
+class Server:
     def __init__(self, global_conf, settings):
         self.global_conf = global_conf
         self.settings = settings

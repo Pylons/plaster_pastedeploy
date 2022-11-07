@@ -3,11 +3,9 @@ from configparser import NoSectionError
 import logging
 from logging.config import fileConfig
 import os
-import sys
 
-from paste.deploy import loadapp, loadserver, loadfilter, appconfig
+from paste.deploy import appconfig, loadapp, loadfilter, loadserver
 import paste.deploy.loadwsgi as loadwsgi
-
 from plaster import ILoader
 from plaster.protocols import IWSGIProtocol
 
@@ -31,7 +29,7 @@ class Loader(IWSGIProtocol, ILoader):
         scheme = get_pastedeploy_scheme(uri)
         if scheme == "config":
             self.filepath = os.path.abspath(uri.path)
-        self.pastedeploy_spec = "{0}:{1}".format(scheme, uri.path)
+        self.pastedeploy_spec = f"{scheme}:{uri.path}"
         self.relative_to = os.getcwd()
 
     def get_sections(self):
@@ -241,7 +239,7 @@ class Loader(IWSGIProtocol, ILoader):
         return name
 
     def __repr__(self):
-        return 'plaster_pastedeploy.Loader(uri="{0}")'.format(self.uri)
+        return f'plaster_pastedeploy.Loader(uri="{self.uri}")'
 
 
 def get_pastedeploy_scheme(uri):
@@ -255,7 +253,7 @@ def get_pastedeploy_scheme(uri):
 
 class ConfigDict(OrderedDict, loadwsgi.AttrDict):
     def __init__(self, local_conf, global_conf, loader):
-        super(ConfigDict, self).__init__(local_conf)
+        super().__init__(local_conf)
         self.global_conf = global_conf
         self.loader = loader
 

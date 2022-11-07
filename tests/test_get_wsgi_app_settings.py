@@ -1,4 +1,5 @@
 import os
+
 import plaster
 import pytest
 
@@ -7,13 +8,11 @@ test_config_relpath = "sample_configs/test_config.ini"
 test_config_path = os.path.abspath(os.path.join(here, test_config_relpath))
 
 
-class TestFullURI(object):
+class TestFullURI:
     @pytest.fixture(autouse=True)
     def loader(self, fake_packages, monkeypatch):
         monkeypatch.chdir(here)
-        self.loader = plaster.get_loader(
-            test_config_relpath, protocols=["wsgi"]
-        )
+        self.loader = plaster.get_loader(test_config_relpath, protocols=["wsgi"])
 
     def test_get_wsgi_app_settings(self):
         result = self.loader.get_wsgi_app_settings("test_get")
@@ -36,7 +35,7 @@ class TestFullURI(object):
         assert "basepath" in result.global_conf
 
 
-class TestSimpleURI(object):
+class TestSimpleURI:
     @pytest.fixture(autouse=True)
     def loader(self, fake_packages, monkeypatch):
         monkeypatch.chdir(here)
@@ -49,7 +48,7 @@ class TestSimpleURI(object):
         assert conf["example"] == "test"
 
 
-class TestEggURI(object):
+class TestEggURI:
     config_uri = "egg:FakeApp#configed"
 
     @pytest.fixture(autouse=True)
