@@ -36,7 +36,7 @@ class TestSimpleUri:
         assert result.global_conf["default_b"] == "override_b"
         assert result.loader == self.loader
 
-        with pytest.raises(Exception):
+        with pytest.raises(Exception, match="default_c"):
             self.loader.get_settings("section2")
 
     def test_defaults_passed(self):

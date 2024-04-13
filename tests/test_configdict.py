@@ -1,5 +1,6 @@
 """ Tests for plaster_pastedeploy.ConfigDict
 """
+
 import copy  # noqa: F401
 
 import plaster
