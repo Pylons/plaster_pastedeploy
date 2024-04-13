@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from configparser import NoSectionError
 import logging
 from logging.config import fileConfig
@@ -71,7 +70,7 @@ class Loader(IWSGIProtocol, ILoader):
         except NoSectionError:
             return {}
 
-        local_conf = OrderedDict()
+        local_conf = {}
         get_from_globals = {}
         for option, value in raw_items:
             if option.startswith("set "):
@@ -161,7 +160,7 @@ class Loader(IWSGIProtocol, ILoader):
 
     def get_wsgi_app_settings(self, name=None, defaults=None):
         """
-        Return an :class:`collections.OrderedDict` representing the
+        Return a dict representing the
         application config for a WSGI application named ``name`` in the
         PasteDeploy config file specified by ``self.uri``.
 
@@ -251,7 +250,7 @@ def get_pastedeploy_scheme(uri):
     return scheme
 
 
-class ConfigDict(OrderedDict, loadwsgi.AttrDict):
+class ConfigDict(loadwsgi.AttrDict):
     def __init__(self, local_conf, global_conf, loader):
         super().__init__(local_conf)
         self.global_conf = global_conf
