@@ -53,7 +53,9 @@ class TestRelativeSectionedURI(TestSectionedURI, TestRelativeURI):
     config_uri = basic_app_relpath + "#main"
 
 
-class TestRelativeSchemeAndSectionedURI(TestSchemeAndSectionedURI, TestRelativeURI):
+class TestRelativeSchemeAndSectionedURI(
+    TestSchemeAndSectionedURI, TestRelativeURI
+):
     config_uri = "pastedeploy+ini:" + basic_app_relpath + "#main"
 
 
