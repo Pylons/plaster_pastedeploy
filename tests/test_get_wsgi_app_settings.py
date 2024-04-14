@@ -12,7 +12,9 @@ class TestFullURI:
     @pytest.fixture(autouse=True)
     def loader(self, fake_packages, monkeypatch):
         monkeypatch.chdir(here)
-        self.loader = plaster.get_loader(test_config_relpath, protocols=["wsgi"])
+        self.loader = plaster.get_loader(
+            test_config_relpath, protocols=["wsgi"]
+        )
 
     def test_get_wsgi_app_settings(self):
         result = self.loader.get_wsgi_app_settings("test_get")
