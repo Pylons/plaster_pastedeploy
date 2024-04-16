@@ -1,5 +1,4 @@
-from collections import OrderedDict
-from configparser import NoSectionError
+from configparser import ConfigParser, NoSectionError
 import logging
 from logging.config import fileConfig
 import os
@@ -44,7 +43,7 @@ class Loader(IWSGIProtocol, ILoader):
         parser = self._get_parser()
         return parser.sections()
 
-    def get_settings(self, section=None, defaults=None):
+    def get_settings(self, section=None, defaults=None, *, raw=False):
         """
         Gets a named section from the configuration source.
 
@@ -54,24 +53,39 @@ class Loader(IWSGIProtocol, ILoader):
         :param defaults: a :class:`dict` that will get passed to
             :class:`configparser.ConfigParser` and will populate the
             ``DEFAULT`` section.
+        :param raw: when not True, return the section without interpolation,
+            application of defaults, or other alteration.  The return
+            value then has a :attr:`global_config` of :code:`None`.
         :return: A :class:`plaster_pastedeploy.ConfigDict` of key/value pairs.
 
         """
-        # This is a partial reimplementation of
+        # This contains a partial reimplementation of
         # ``paste.deploy.loadwsgi.ConfigLoader:get_context`` which supports
         # "set" and "get" options and filters out any other globals
         section = self._maybe_get_default_name(section)
         if self.filepath is None:
             return {}
-        parser = self._get_parser(defaults)
-        defaults = parser.defaults()
+
+        if raw:
+            parser = ConfigParser(default_section=None, interpolation=None)
+            with open(self.uri.path) as fd:
+                parser.read_file(fd, source=self.uri.path)
+        else:
+            parser = self._get_parser(defaults)
+            defaults = parser.defaults()
 
         try:
             raw_items = parser.items(section)
         except NoSectionError:
             return {}
 
-        local_conf = OrderedDict()
+        local_conf = {}
+
+        if raw:
+            for option, value in raw_items:
+                local_conf[option] = value
+            return ConfigDict(local_conf, None, self)
+
         get_from_globals = {}
         for option, value in raw_items:
             if option.startswith("set "):
@@ -161,7 +175,7 @@ class Loader(IWSGIProtocol, ILoader):
 
     def get_wsgi_app_settings(self, name=None, defaults=None):
         """
-        Return an :class:`collections.OrderedDict` representing the
+        Return a dict representing the
         application config for a WSGI application named ``name`` in the
         PasteDeploy config file specified by ``self.uri``.
 
@@ -251,7 +265,7 @@ def get_pastedeploy_scheme(uri):
     return scheme
 
 
-class ConfigDict(OrderedDict, loadwsgi.AttrDict):
+class ConfigDict(loadwsgi.AttrDict):
     def __init__(self, local_conf, global_conf, loader):
         super().__init__(local_conf)
         self.global_conf = global_conf
