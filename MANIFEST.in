@@ -10,6 +10,7 @@ include CONTRIBUTORS.txt
 
 include pyproject.toml
 include .coveragerc .flake8 pytest.ini
+include .mailmap
 include tox.ini
 
 recursive-exclude * __pycache__ *.py[cod]
